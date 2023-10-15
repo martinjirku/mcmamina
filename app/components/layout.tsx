@@ -1,7 +1,9 @@
 import { NavLink } from "@remix-run/react";
 import type { LinkProps } from "@remix-run/react";
+import { useReducer } from "react";
 import type { FC, PropsWithChildren } from "react";
 
+import { AnimatedHamburger } from "./animatedHamburger";
 import {
   Phone,
   Mail,
@@ -45,22 +47,52 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
   style,
   children,
 }) => {
+  const [isOpen, toggleOpen] = useReducer((v: boolean) => !v, false);
   return (
     <div className="h-screen flex flex-col">
-      <header className="w-full bg-indigo-400 sticky shadow-lg -top-5">
-        <nav className="flex justify-around py-6" aria-label="Hlavné">
-          <ul className="flex gap-6 text-cyan-50">
+      <header className="w-full bg-indigo-400 sticky shadow-lg -top-5 text-cyan-50">
+        <nav className="hidden md:flex justify-around py-6" aria-label="Hlavné">
+          <ul className="flex gap-6">
             <MenuItem to="/">Domov</MenuItem>
             <MenuItem to="/o-nas">O nás</MenuItem>
             <MenuItem to="/kontakt">Kontakt</MenuItem>
             <MenuItem to="/podpora">Podporte nás</MenuItem>
           </ul>
         </nav>
+        <nav
+          className="w-full p-2 flex md:hidden left-0 flex-col"
+          aria-label="Hlavné"
+        >
+          <h1 className="font-light py-2 text-2xl">Mc Mamina</h1>
+          <button
+            className="stroke-indigo-100 absolute right-0"
+            onClick={toggleOpen}
+            aria-label="Open menu"
+          >
+            <AnimatedHamburger open={isOpen} dimension={46} />
+          </button>
+          {
+            <ul
+              className={`${
+                isOpen ? "visible" : "hidden"
+              } flex flex-col gap-6 absoluten static text-cyan-50 transition-transform transform ${
+                isOpen
+                  ? "translate-y-0 opacity-100"
+                  : "-translate-y-full opacity-0"
+              }`}
+            >
+              <MenuItem to="/">Domov</MenuItem>
+              <MenuItem to="/o-nas">O nás</MenuItem>
+              <MenuItem to="/kontakt">Kontakt</MenuItem>
+              <MenuItem to="/podpora">Podporte nás</MenuItem>
+            </ul>
+          }
+        </nav>
       </header>
       <main className={`${className} flex-grow`} style={style}>
         {children}
       </main>
-      <footer className="w-full flex pt-10 px-6 pb-16 content-center justify-around bg-neutral-900 h-min-40 text-indigo-100 lg:sticky lg:-bottom-48 ">
+      <footer className="w-full flex pt-10 px-6 pb-16 shadow-xl content-center justify-around bg-neutral-900 h-min-40 text-indigo-100 lg:sticky lg:-bottom-48 ">
         <div className="grid grid-cols-12 gap-6">
           <address className="col-span-12 sm:col-span-6 lg:col-span-6 not-italic font-thin text-sm">
             <h2 className="font-bold leading-10 underline underline-offset-4">

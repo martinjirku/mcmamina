@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-interface SvgProps {
+export interface SvgProps {
   className?: string | undefined;
   dimension?: number | undefined;
 }
