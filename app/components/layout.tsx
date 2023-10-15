@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, NavLink } from "@remix-run/react";
 import type { LinkProps } from "@remix-run/react";
 import type { FC, PropsWithChildren } from "react";
 
@@ -16,11 +16,22 @@ interface MenuItemProps {
   to: LinkProps["to"];
 }
 const MenuItem: FC<PropsWithChildren<MenuItemProps>> = ({ children, to }) => {
+  const defaultClasses =
+    "rounded-md transition-colors ease-out-in delay-50 duration-200 text-indigo-50 py-4 px-4 inline-block w-full h-full";
   return (
-    <li className="inline-block align-middle relative rounded-md transition-colors ease-out-in delay-50 duration-200 bg-indigo-400 hover:bg-indigo-500 hover:opacity-90">
-      <Link className="py-4 px-4 inline-block w-full h-full" to={to}>
+    <li className="inline-block align-middle relative">
+      <NavLink
+        className={({ isActive }) =>
+          `${defaultClasses} ${
+            isActive
+              ? "bg-indigo-500 opacity-70 pointer-events-none"
+              : "bg-indigo-400 hover:bg-indigo-500 hover:opacity-90"
+          }`
+        }
+        to={to}
+      >
         {children}
-      </Link>
+      </NavLink>
     </li>
   );
 };
@@ -49,9 +60,9 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
       <main className={`${className} flex-grow`} style={style}>
         {children}
       </main>
-      <footer className="w-full flex pt-10 px-6 pb-16 content-center justify-around bg-neutral-900 h-min-40 text-indigo-200">
-        <div className="grid grid-cols-4 gap-4">
-          <address className="col-span-4 md:col-span-2 not-italic font-thin text-sm">
+      <footer className="w-full flex pt-10 px-6 pb-16 content-center justify-around bg-neutral-900 h-min-40 text-indigo-100">
+        <div className="grid grid-cols-12 gap-6">
+          <address className="col-span-12 sm:col-span-6 lg:col-span-6 not-italic font-thin text-sm">
             <h2 className="font-bold leading-10 underline underline-offset-4">
               Materské centrum MAMINA o.z.
             </h2>
@@ -104,7 +115,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
               </a>
             </span>
           </address>
-          <div className="col-span-4 md:col-span-1 font-thin text-sm">
+          <div className="col-span-12 sm:col-span-6 lg:col-span-4 font-thin text-sm">
             <h1 className="font-bold leading-10 underline underline-offset-4">
               Otváracie hodiny
             </h1>
@@ -229,17 +240,18 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
             </span>
             <br />
           </div>
-          <div className="col-span-4 md:col-span-1 mt-2 md:mt-0 font-thin text-sm flex justify-start items-center flex-col">
+          <div className="col-span-12 sm:col-span-12 lg:col-span-2 mt-2 lg:mt-0 font-thin text-sm flex justify-start items-center flex-col">
             <div className="flex-grow-0 flex justify-around items-center pb-5">
               <a
                 href="https://www.facebook.com/MaterskeCentrumMamina/"
                 aria-label="Facebook stránka Materského centra MAMINA"
                 target="_blank"
+                className="p-2"
                 rel="noreferrer"
                 title="Facebook stránka Materského centra MAMINA"
               >
                 <Facebook
-                  className="fill-indigo-100 mr-2 hover:animate-pulse"
+                  className="fill-indigo-100 hover:animate-pulse"
                   dimension={42}
                 />
               </a>
@@ -248,15 +260,16 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
                 aria-label="Instagram stránka Materského centra MAMINA"
                 target="_blank"
                 rel="noreferrer"
+                className="p-2"
                 title="Instagram stránka Materského centra MAMINA"
               >
                 <Instagram
-                  className="fill-indigo-100 mr-2 hover:animate-pulse"
+                  className="fill-indigo-100 hover:animate-pulse"
                   dimension={42}
                 />
               </a>
             </div>
-            <div className="w-full flex-grow flex items-center justify-center mt-10 md:mt-0">
+            <div className="w-full flex-grow flex items-center justify-center mt-10 lg:mt-0">
               <a
                 href="https://linkedin.com/in/martin-j-65786267"
                 target="_blank"
