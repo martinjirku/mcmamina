@@ -60,7 +60,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
       <main className={`${className} flex-grow`} style={style}>
         {children}
       </main>
-      <footer className="w-full flex pt-10 px-6 pb-16 content-center justify-around bg-neutral-900 h-min-40 text-indigo-100 sticky -bottom-48">
+      <footer className="w-full flex pt-10 px-6 pb-16 content-center justify-around bg-neutral-900 h-min-40 text-indigo-100 lg:sticky lg:-bottom-48 ">
         <div className="grid grid-cols-12 gap-6">
           <address className="col-span-12 sm:col-span-6 lg:col-span-6 not-italic font-thin text-sm">
             <h2 className="font-bold leading-10 underline underline-offset-4">

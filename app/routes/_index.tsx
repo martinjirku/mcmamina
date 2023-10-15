@@ -13,18 +13,18 @@ export default function Index() {
       className="w-full bg-cover bg-center text-indigo-800 font-light"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="w-full bg-indigo-100 bg-opacity-80 my-32 text-xl leading-10 flex justify-around py-20">
-        <div className="max-w-lg">
+      <div className="w-full bg-indigo-100 bg-opacity-80 text-xl leading-10 flex justify-around py-12 my-12 md:py-16 md:my-16 xl:py-20 xl:my-28">
+        <div className="w-full px-2 md:max-w-lg">
           Naše centrum je pre Vás otvorené každý pracovný deň v čase 9:00 -
           12:30 a 16:00 - 19:00 (v piatky iba doobeda).
         </div>
       </div>
-      <div className="w-full bg-indigo-100 bg-opacity-80 text-xl leading-10 flex justify-around my-28 py-20">
-        <div className="max-w-xxl">
+      <div className="w-full bg-indigo-100 bg-opacity-80 text-xl leading-10 flex justify-around py-12 my-12 md:py-16 md:my-16 xl:py-20 xl:my-28">
+        <div className="w-full md:max-w-2xl px-2">
           <h1 className="text-xxl font-semibold">Príspevky na chod</h1>
           <hr className="h-px border-t-0 my-4 bg-gradient-to-r from-indigo-500 to-pink-500 " />
-          <div className="grid grid-cols-2 gap-14">
-            <div>
+          <div className="grid grid-cols-2 gap-10">
+            <div className="col-span-2 sm:col-span-1">
               <h2 className="">Do herne</h2>
               <table className="text-sm">
                 <tbody>
@@ -46,7 +46,7 @@ export default function Index() {
                 </tbody>
               </table>
             </div>
-            <div>
+            <div className="col-span-2 sm:col-span-1">
               <h2 className="">Požičiavanie kníh</h2>
               <p className="text-sm">0,50 € / kniha / 2 týždne</p>
               <h2 className="mt-6">Narodeninové oslavy</h2>
