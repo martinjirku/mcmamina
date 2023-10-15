@@ -90,8 +90,127 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
                 +421904 102 740 - Zuzka Zemanová
               </a>
             </span>
+            <br />
+            <h1 className="inline-block mt-3 font-bold leading-10 underline underline-offset-4">
+              Štatutárka
+            </h1>
+            <br />
+            <span>Mária Krajčová</span>
+            <br />
+            <span>
+              <a href="mailto:info@mcmamina.sk">
+                <Mail className="fill-indigo-100 mr-2" dimension={16} />
+                info@mcmamina.sk
+              </a>
+            </span>
           </address>
           <div className="col-span-4 md:col-span-1 font-thin text-sm">
+            <h1 className="font-bold leading-10 underline underline-offset-4">
+              Otváracie hodiny
+            </h1>
+            <table>
+              <thead>
+                <tr className="hidden">
+                  <th>Dni</th>
+                  <th>Čas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="pr-3">Pondelok</td>
+                  <td>
+                    <time dateTime="09:00-2" aria-label="09:00">
+                      9:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="12:30-2" aria-label="12:30">
+                      12:30
+                    </time>{" "}
+                    |{" "}
+                    <time dateTime="16:00-2" aria-label="16:00">
+                      16:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="19:00-2" aria-label="19:00">
+                      19:00
+                    </time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Utorok</td>
+                  <td>
+                    <time dateTime="09:00-2" aria-label="09:00">
+                      9:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="12:30-2" aria-label="12:30">
+                      12:30
+                    </time>{" "}
+                    |{" "}
+                    <time dateTime="16:00-2" aria-label="16:00">
+                      16:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="19:00-2" aria-label="19:00">
+                      19:00
+                    </time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Streda</td>
+                  <td>
+                    <time dateTime="09:00-2" aria-label="09:00">
+                      9:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="12:30-2" aria-label="12:30">
+                      12:30
+                    </time>{" "}
+                    |{" "}
+                    <time dateTime="16:00-2" aria-label="16:00">
+                      16:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="19:00-2" aria-label="19:00">
+                      19:00
+                    </time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Štvrtok</td>
+                  <td>
+                    <time dateTime="09:00-2" aria-label="09:00">
+                      9:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="12:30-2" aria-label="12:30">
+                      12:30
+                    </time>{" "}
+                    |{" "}
+                    <time dateTime="16:00-2" aria-label="16:00">
+                      16:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="19:00-2" aria-label="19:00">
+                      19:00
+                    </time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Piatok</td>
+                  <td>
+                    <time dateTime="09:00-2" aria-label="09:00">
+                      9:00
+                    </time>{" "}
+                    -{" "}
+                    <time dateTime="12:30-2" aria-label="12:30">
+                      12:30
+                    </time>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
             <h1 className="font-bold leading-10 underline underline-offset-4">
               Fakturačné údaje
             </h1>
@@ -109,18 +228,6 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
               0000 0023 0190 0933
             </span>
             <br />
-            <h1 className="inline-block mt-3 font-bold leading-10 underline underline-offset-4">
-              Štatutárka
-            </h1>
-            <br />
-            <span>Mária Krajčová</span>
-            <br />
-            <span>
-              <a href="mailto:info@mcmamina.sk">
-                <Mail className="fill-indigo-100 mr-2" dimension={16} />
-                info@mcmamina.sk
-              </a>
-            </span>
           </div>
           <div className="col-span-4 md:col-span-1 mt-2 md:mt-0 font-thin text-sm flex justify-start items-center flex-col">
             <div className="flex-grow-0 flex justify-around items-center pb-5">
@@ -150,13 +257,16 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
               </a>
             </div>
             <div className="w-full flex-grow flex items-center justify-center mt-10 md:mt-0">
-              <div
+              <a
+                href="https://linkedin.com/in/martin-j-65786267"
+                target="_blank"
+                rel="noreferrer"
                 className="px-5 py-3 bg-slate-800 rounded-md  hover:animate-spin hover:cursor-pointer"
                 style={{ animationIterationCount: 1 }}
               >
                 <Signature className="fill-indigo-100 mr-2" dimension={16} />{" "}
                 Vytvoril MJ
-              </div>
+              </a>
             </div>
           </div>
         </div>
