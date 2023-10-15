@@ -60,7 +60,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
           </ul>
         </nav>
         <nav className="w-full md:hidden left-0 flex-col" aria-label="Hlavné">
-          <div className="w-full flex bg-indigo-400 z-30">
+          <div className="w-full flex relative bg-indigo-400 z-30">
             <h1 className="font-light p-2 py-2 text-2xl">Mc Mamina</h1>
             <button
               className="stroke-indigo-100 absolute right-0 pr-2"
