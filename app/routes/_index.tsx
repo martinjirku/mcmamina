@@ -4,7 +4,7 @@ import { Layout } from "~/components/layout";
 import backgroundImage from "~/images/crayons-1445053_640.jpg";
 // import { useOptionalUser } from "~/utils";
 
-export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
+export const meta: MetaFunction = () => [{ title: "MC Mamina" }];
 
 export default function Index() {
   // const user = useOptionalUser();
