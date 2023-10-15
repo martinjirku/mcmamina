@@ -59,34 +59,31 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
             <MenuItem to="/podpora">Podporte nás</MenuItem>
           </ul>
         </nav>
-        <nav
-          className="w-full p-2 flex md:hidden left-0 flex-col"
-          aria-label="Hlavné"
-        >
-          <h1 className="font-light py-2 text-2xl">Mc Mamina</h1>
-          <button
-            className="stroke-indigo-100 absolute right-0"
-            onClick={toggleOpen}
-            aria-label="Open menu"
-          >
-            <AnimatedHamburger open={isOpen} dimension={46} />
-          </button>
-          {
-            <ul
-              className={`${
-                isOpen ? "visible" : "hidden"
-              } flex flex-col gap-6 absoluten static text-cyan-50 transition-transform transform ${
-                isOpen
-                  ? "translate-y-0 opacity-100"
-                  : "-translate-y-full opacity-0"
-              }`}
+        <nav className="w-full md:hidden left-0 flex-col" aria-label="Hlavné">
+          <div className="w-full flex bg-indigo-400 z-30">
+            <h1 className="font-light p-2 py-2 text-2xl">Mc Mamina</h1>
+            <button
+              className="stroke-indigo-100 absolute right-0 pr-2"
+              onClick={toggleOpen}
+              aria-label="Open menu"
             >
-              <MenuItem to="/">Domov</MenuItem>
-              <MenuItem to="/o-nas">O nás</MenuItem>
-              <MenuItem to="/kontakt">Kontakt</MenuItem>
-              <MenuItem to="/podpora">Podporte nás</MenuItem>
-            </ul>
-          }
+              <AnimatedHamburger open={isOpen} dimension={46} />
+            </button>
+          </div>
+          <ul
+            className={`${
+              isOpen ? "h-auto" : "h-0"
+            } flex z-10 flex-col gap-6 absolute top-12 bg-indigo-400 w-full text-cyan-50 transition-transform ease-in-out duration-500 transform ${
+              isOpen
+                ? "translate-y-0 opacity-100"
+                : "-translate-y-full opacity-0"
+            }`}
+          >
+            <MenuItem to="/">Domov</MenuItem>
+            <MenuItem to="/o-nas">O nás</MenuItem>
+            <MenuItem to="/kontakt">Kontakt</MenuItem>
+            <MenuItem to="/podpora">Podporte nás</MenuItem>
+          </ul>
         </nav>
       </header>
       <main className={`${className} flex-grow`} style={style}>
