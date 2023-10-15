@@ -7,16 +7,6 @@ const toml = require("@iarna/toml");
 const PackageJson = require("@npmcli/package-json");
 const semver = require("semver");
 
-const cleanupCypressFiles = ({ fileEntries, packageManager }) =>
-  fileEntries.flatMap(([filePath, content]) => {
-    const newContent = content.replace(
-      new RegExp("npx ts-node", "g"),
-      `${packageManager.exec} ts-node`,
-    );
-
-    return [fs.writeFile(filePath, newContent)];
-  });
-
 const escapeRegExp = (string) =>
   // $& means the whole matched string
   string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -79,16 +69,6 @@ const main = async ({ packageManager, rootDirectory }) => {
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const DOCKERFILE_PATH = path.join(rootDirectory, "Dockerfile");
-  const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support");
-  const CYPRESS_COMMANDS_PATH = path.join(CYPRESS_SUPPORT_PATH, "commands.ts");
-  const CREATE_USER_COMMAND_PATH = path.join(
-    CYPRESS_SUPPORT_PATH,
-    "create-user.ts",
-  );
-  const DELETE_USER_COMMAND_PATH = path.join(
-    CYPRESS_SUPPORT_PATH,
-    "delete-user.ts",
-  );
 
   const REPLACER = "indie-stack-template";
 
@@ -99,25 +79,15 @@ const main = async ({ packageManager, rootDirectory }) => {
     // get rid of anything that's not allowed in an app name
     .replace(/[^a-zA-Z0-9-_]/g, "-");
 
-  const [
-    prodContent,
-    readme,
-    env,
-    dockerfile,
-    cypressCommands,
-    createUserCommand,
-    deleteUserCommand,
-    packageJson,
-  ] = await Promise.all([
-    fs.readFile(FLY_TOML_PATH, "utf-8"),
-    fs.readFile(README_PATH, "utf-8"),
-    fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
-    fs.readFile(DOCKERFILE_PATH, "utf-8"),
-    fs.readFile(CYPRESS_COMMANDS_PATH, "utf-8"),
-    fs.readFile(CREATE_USER_COMMAND_PATH, "utf-8"),
-    fs.readFile(DELETE_USER_COMMAND_PATH, "utf-8"),
-    PackageJson.load(rootDirectory),
-  ]);
+  const [prodContent, readme, env, dockerfile, packageJson] = await Promise.all(
+    [
+      fs.readFile(FLY_TOML_PATH, "utf-8"),
+      fs.readFile(README_PATH, "utf-8"),
+      fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
+      fs.readFile(DOCKERFILE_PATH, "utf-8"),
+      PackageJson.load(rootDirectory),
+    ],
+  );
 
   const newEnv = env.replace(
     /^SESSION_SECRET=.*$/m,
@@ -156,14 +126,6 @@ const main = async ({ packageManager, rootDirectory }) => {
     fs.writeFile(README_PATH, newReadme),
     fs.writeFile(ENV_PATH, newEnv),
     fs.writeFile(DOCKERFILE_PATH, newDockerfile),
-    ...cleanupCypressFiles({
-      fileEntries: [
-        [CYPRESS_COMMANDS_PATH, cypressCommands],
-        [CREATE_USER_COMMAND_PATH, createUserCommand],
-        [DELETE_USER_COMMAND_PATH, deleteUserCommand],
-      ],
-      packageManager: pm,
-    }),
     packageJson.save(),
     fs.copyFile(
       path.join(rootDirectory, "remix.init", "gitignore"),
