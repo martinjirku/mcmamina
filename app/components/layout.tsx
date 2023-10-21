@@ -184,7 +184,7 @@ const OpeningHours: FC = () => (
       </thead>
       <tbody>
         <tr>
-          <td className="w-44 sm:w-32 md:w-36 lg:w-40">Pondelok</td>
+          <td className="w-36 sm:w-32 md:w-36 lg:w-40">Pondelok</td>
           <td>
             <time dateTime="09:00-2" aria-label="09:00">
               9:00
@@ -290,7 +290,7 @@ const Contacts: FC = () => (
       <tbody>
         <tr>
           <td
-            className="w-44 sm:w-32 md:w-36 lg:w-40 align-text-top"
+            className="w-36 sm:w-32 md:w-36 lg:w-40 align-text-top"
             rowSpan={2}
           >
             Oslavy

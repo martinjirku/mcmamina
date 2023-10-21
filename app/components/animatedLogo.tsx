@@ -8,7 +8,6 @@ interface Props {
   animated?: boolean;
 }
 export const Logo: FC<Props> = ({ className, dimension, animated }) => {
-  console.log(className, dimension, animated);
   return (
     <svg
       className={`mcmamina-logo ${className ?? ""} ${
