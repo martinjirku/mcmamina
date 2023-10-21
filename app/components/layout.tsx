@@ -26,7 +26,7 @@ const MenuItem: FC<PropsWithChildren<MenuItemProps>> = ({ children, to }) => {
         className={({ isActive }) =>
           `${defaultClasses} ${
             isActive
-              ? "bg-indigo-500 opacity-70 pointer-events-none"
+              ? `bg-indigo-500 opacity-70`
               : "bg-indigo-400 hover:bg-indigo-500 hover:opacity-90"
           }`
         }
@@ -55,7 +55,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
           <ul className="flex gap-6">
             <MenuItem to="/">Domov</MenuItem>
             <MenuItem to="/o-nas">O nás</MenuItem>
-            <MenuItem to="/kontakt">Kontakt</MenuItem>
+            <MenuItem to="/aktivity">Aktivity</MenuItem>
             <MenuItem to="/podpora">Podporte nás</MenuItem>
           </ul>
         </nav>
