@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
 import { Logo } from "~/components/animatedLogo";
+import { TwoWeeksCalendar } from "~/components/calendar2Weeks";
 import { HorizontalDelimiter } from "~/components/delimiter";
 import { FullWidthCard, CardContent } from "~/components/fullWidthCard";
 import { Layout } from "~/components/layout";
@@ -22,9 +23,19 @@ export default function Index() {
           <div className="flex-grow md:max-w-xs flex justify-around items-center">
             <Logo className="w-48 lg:w-64" animated />
           </div>
-          <div className="flex-grow md:max-w-xl pt-10 flex items-center justify-center text-center">
-            Naše centrum je pre Vás otvorené každý pracovný deň v čase 9:00 -
-            12:30 a 16:00 - 19:00 (v piatky iba doobeda).
+          <div className="flex-grow md:max-w-xl gap-6 flex flex-col items-center justify-evenly text-center">
+            <span>
+              Naše centrum je pre Vás otvorené každý pracovný deň v čase 9:00 -
+              12:30 a 16:00 - 19:00 (v piatky iba doobeda). Najbližšie akcie
+              nájdete v našom{" "}
+              <Link className="underline underline-offset-4" to="/kalendar">
+                kalendári
+              </Link>
+              .
+            </span>
+            <div className="w-full w-grow">
+              <TwoWeeksCalendar />
+            </div>
           </div>
         </CardContent>
       </FullWidthCard>

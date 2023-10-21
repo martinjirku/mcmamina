@@ -19,7 +19,11 @@ export const CardContent: FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   return (
-    <div className={`w-full md:max-w-2xl ${className ? className : ""}`}>
+    <div
+      className={`w-full md:max-w-3xl lg:max-w-4xl ${
+        className ? className : ""
+      }`}
+    >
       {children}
     </div>
   );
