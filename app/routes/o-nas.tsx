@@ -1,3 +1,4 @@
+import { Logo } from "~/components/animatedLogo";
 import { Layout } from "~/components/layout";
 import backgroundImage from "~/images/crayons-1445053_640.jpg";
 
@@ -8,6 +9,9 @@ export default function ONasPage() {
       className="w-full bg-cover bg-center text-indigo-800 font-light"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
+      <div className="w-full bg-indigo-100 bg-opacity-80 flex justify-around content-center py-12 my-12 md:py-16 md:my-16 xl:py-20 xl:my-28">
+        <Logo />
+      </div>
       <div className="w-full bg-indigo-100 bg-opacity-80 text-xl leading-10 flex justify-around py-12 my-12 md:py-16 md:my-16 xl:py-20 xl:my-28">
         <iframe
           src="https://www.mcmamina.sk/nova_stranka/vtour/"
