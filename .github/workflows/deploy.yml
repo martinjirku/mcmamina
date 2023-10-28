@@ -102,9 +102,13 @@ jobs:
         run: flyctl deploy --remote-only --region waw --build-arg COMMIT_SHA=${{ github.sha }} --app ${{ steps.app_name.outputs.value }}-staging
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
         run: flyctl deploy --remote-only --region waw --build-arg COMMIT_SHA=${{ github.sha }} --app ${{ steps.app_name.outputs.value }}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
