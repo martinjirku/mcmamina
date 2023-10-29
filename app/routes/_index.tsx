@@ -1,18 +1,32 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 
 import { Logo } from "~/components/animatedLogo";
-import { TwoWeeksCalendar } from "~/components/calendar2Weeks";
+import { TwoWeeksCalendar, Event } from "~/components/calendar2Weeks";
 import { HorizontalDelimiter } from "~/components/delimiter";
 import { FullWidthCard, CardContent } from "~/components/fullWidthCard";
 import { Layout } from "~/components/layout";
+import { getEvents } from "~/gateway/google.server";
 import backgroundImage from "~/images/crayons-1445053_640.jpg";
-// import { useOptionalUser } from "~/utils";
 
 export const meta: MetaFunction = () => [{ title: "MC Mamina" }];
 
+export const loader = async () => {
+  const eventItems = await getEvents();
+  const events = eventItems?.items
+    ?.filter((i) => i.summary)
+    .map<Event>((i) => ({
+      title: i.summary ?? "",
+      start: i.start?.dateTime ?? undefined,
+      end: i.end?.dateTime ?? undefined,
+    }));
+  return json({ events });
+};
+
 export default function Index() {
   // const user = useOptionalUser();
+  const actionData = useLoaderData<typeof loader>();
   return (
     <Layout
       className="w-full bg-cover bg-center text-indigo-800 font-light"
@@ -37,7 +51,7 @@ export default function Index() {
               . Najbližšie dni nás čaká:
             </span>
             <div className="w-full w-grow">
-              <TwoWeeksCalendar />
+              <TwoWeeksCalendar events={actionData.events as Event[]} />
             </div>
           </div>
         </CardContent>
