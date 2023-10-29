@@ -50,17 +50,17 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
   const [isOpen, toggleOpen] = useReducer((v: boolean) => !v, false);
   return (
     <div className="h-screen flex flex-col">
-      <header className="w-full z-50 bg-indigo-400 sticky shadow-lg -top-5 text-cyan-50">
+      <header className="w-full z-50 bg-indigo-400 sticky shadow-lg top-0 text-cyan-50">
         <nav className="hidden md:flex justify-around py-6" aria-label="Hlavné">
           <ul className="flex gap-6">
             <MenuItem to="/">Domov</MenuItem>
             <MenuItem to="/o-nas">O nás</MenuItem>
             <MenuItem to="/aktivity">Aktivity</MenuItem>
-            <MenuItem to="/podpora">Podporte nás</MenuItem>
+            <MenuItem to="/podpora">Podporili nás</MenuItem>
           </ul>
         </nav>
         <nav className="w-full md:hidden left-0 flex-col" aria-label="Hlavné">
-          <div className="w-full flex relative bg-indigo-400 z-30">
+          <div className="w-full flex relative bg-indigo-400 z-30 py-4">
             <h1 className="font-light p-2 py-2 text-2xl">Mc Mamina</h1>
             <button
               className="stroke-indigo-100 absolute right-0 pr-2"
@@ -73,7 +73,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
           <ul
             className={`${
               isOpen ? "h-auto" : "h-0 overflow-hidden"
-            } flex z-10 flex-col gap-6 absolute top-12 bg-indigo-400 w-full text-cyan-50 transition-transform ease-in-out duration-500 transform ${
+            } flex z-10 flex-col gap-6 absolute top-20 bg-indigo-400 w-full text-cyan-50 transition-transform ease-in-out duration-500 transform ${
               isOpen
                 ? "translate-y-0 opacity-100"
                 : "-translate-y-full opacity-0"
@@ -81,8 +81,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
           >
             <MenuItem to="/">Domov</MenuItem>
             <MenuItem to="/o-nas">O nás</MenuItem>
-            <MenuItem to="/kontakt">Kontakt</MenuItem>
-            <MenuItem to="/podpora">Podporte nás</MenuItem>
+            <MenuItem to="/podpora">Podporili nás</MenuItem>
           </ul>
         </nav>
       </header>
@@ -358,7 +357,7 @@ const Socials: FC = () => (
       />
     </a>
     <a
-      href="https://www.facebook.com/MaterskeCentrumMamina/"
+      href="https://www.instagram.com/mc.mamina/"
       aria-label="Instagram stránka Materského centra MAMINA"
       target="_blank"
       rel="noreferrer"
