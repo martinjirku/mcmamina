@@ -12,6 +12,29 @@ import {
 } from "@floating-ui/react";
 import { FC, useState, useRef, useEffect } from "react";
 
+const dateTimeOptions: Intl.DateTimeFormatOptions = {
+  hour12: false,
+  hour: "numeric",
+  minute: "numeric",
+  second: undefined,
+};
+
+const getStartOfDay = (date: Date) => {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
+const getEndOfDay = (date: Date) => {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    23,
+    59,
+    59,
+    999,
+  );
+};
+
 export interface Event {
   title: string;
   start?: string;
@@ -51,9 +74,16 @@ const getDays = (events: Event[]): DayDto[] => {
       date: currentDay,
       isToday: currentDay.toDateString() === todayDate.toDateString(),
       isBeforeToday: currentDay < todayDate,
-      events: events?.filter((e) =>
-        e.start ? isSameDay(new Date(e.start), currentDay) : false,
-      ),
+      events: events?.filter((e) => {
+        const eventStart = new Date(e.start ?? "");
+        if (isSameDay(eventStart, currentDay)) {
+          return true;
+        }
+        const eventEnd = new Date(e.end ?? "");
+        const startOfDay = getStartOfDay(currentDay);
+        const endOfDay = getEndOfDay(currentDay);
+        return eventStart <= endOfDay && eventEnd >= startOfDay;
+      }),
     };
   });
   return dayDtos;
@@ -109,6 +139,7 @@ const Day: FC<{ day: DayDto }> = ({ day }) => {
   let tooltip = null;
   const hasEvents = day.events?.length ?? 0 > 0;
   if (hasEvents) {
+    const currentDay = day.date?.toLocaleDateString("sk-SK", {});
     tooltip = (
       <div
         ref={refs.setFloating}
@@ -119,38 +150,45 @@ const Day: FC<{ day: DayDto }> = ({ day }) => {
         {...getFloatingProps()}
       >
         <h3 className="text-md font-semibold pb-2">
-          {day.date?.toLocaleDateString("sk-SK", {})} - {day.title}
+          {currentDay} - {day.title}
         </h3>
         <ul>
-          {day.events?.map((v, idx) => (
-            <li key={`${v.title}-${v.start}`}>
-              <span
-                className={`w-2 h-2 md:w-3 md:h-3 rounded-full inline-block mr-2 ${
-                  idx === 0
-                    ? "bg-pink-500"
-                    : idx === 1
-                    ? "bg-green-500"
-                    : "bg-yellow-500"
-                }`}
-              />
-              {new Date(v.start ?? "")?.toLocaleTimeString("sk-SK", {
-                hour12: false,
-                hour: "numeric",
-                minute: "numeric",
-                second: undefined,
-              })}{" "}
-              -{" "}
-              {v.end
-                ? new Date(v.end ?? "")?.toLocaleTimeString("sk-SK", {
-                    hour12: false,
-                    hour: "numeric",
-                    minute: "numeric",
-                    second: undefined,
-                  })
-                : ""}{" "}
-              - {v.title}
-            </li>
-          ))}
+          {day.events?.map((v, idx) => {
+            const startDay = v.start
+              ? new Date(v.start).toLocaleDateString("sk-SK", {})
+              : "";
+            const endDay = v.end
+              ? new Date(v.end).toLocaleDateString("sk-SK", {})
+              : "";
+            let startLabel = new Date(v.start ?? "")?.toLocaleTimeString(
+              "sk-SK",
+              dateTimeOptions,
+            );
+            if (startDay !== currentDay) {
+              startLabel = `${startDay} ${startLabel}`;
+            }
+            let endLabel = new Date(v.end ?? "")?.toLocaleTimeString(
+              "sk-SK",
+              dateTimeOptions,
+            );
+            if (endDay !== currentDay) {
+              endLabel = `${endDay} ${endLabel}`;
+            }
+            return (
+              <li key={`${v.title}-${v.start}`}>
+                <span
+                  className={`w-2 h-2 md:w-3 md:h-3 rounded-full inline-block mr-2 ${
+                    idx === 0
+                      ? "bg-pink-500"
+                      : idx === 1
+                      ? "bg-green-500"
+                      : "bg-yellow-500"
+                  }`}
+                />
+                {startLabel} - {endLabel} - {v.title}
+              </li>
+            );
+          })}
         </ul>
         <FloatingArrow
           ref={arrowRef}
