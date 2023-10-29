@@ -10,6 +10,7 @@ import {
   safePolygon,
   shift,
 } from "@floating-ui/react";
+import { Link } from "@remix-run/react";
 import { FC, useState, useRef, useEffect } from "react";
 
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
@@ -93,7 +94,7 @@ export const TwoWeeksCalendar: FC<{ events: Event[] }> = ({ events }) => {
   const days = getDays(events);
 
   return (
-    <div className="sm:w-full scroll-m-0">
+    <div className="sm:w-full scroll-m-0 text-right">
       <div className="w-full grid grid-cols-5 gap-2 text-indigo-500">
         {days.map((day, i) => (
           <Day
@@ -102,6 +103,9 @@ export const TwoWeeksCalendar: FC<{ events: Event[] }> = ({ events }) => {
           />
         ))}
       </div>
+      <Link className="underline underline-offset-4 text-sm" to="/kalendar">
+        celý kalendár...
+      </Link>
     </div>
   );
 };

@@ -20,7 +20,6 @@ export const getEvents = async () => {
     process.env.GOOGLE_CALENDAR_ID ??
     "n4bgt6kl18u5ueku1g38f5kic8@group.calendar.google.com";
   if (cachedEvents.hasItem(calendarId)) {
-    console.log(">>>>>", cachedEvents.retrieveItemValue(calendarId));
     return Promise.resolve(cachedEvents.retrieveItemValue(calendarId));
   }
   const result = await getGoogleCalendarClient().events.list({
