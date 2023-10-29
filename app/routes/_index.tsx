@@ -41,11 +41,8 @@ export default function Index() {
             <span>
               Naše centrum je pre Vás otvorené každý pracovný deň v čase 9:00 -
               12:30 a 16:00 - 19:00 (v piatky iba doobeda). Najbližšie akcie
-              nájdete v našom
+              nájdete v našom{" "}
               <Link className="underline underline-offset-4" to="/kalendar">
-                <span className="material-symbols-outlined">
-                  calendar_month
-                </span>
                 kalendári
               </Link>
               . Najbližšie dni nás čaká:
