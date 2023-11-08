@@ -1,3 +1,9 @@
+import { FullWidthCard, CardContent } from "~/components/fullWidthCard";
+
 export default function Index() {
-  return <div>root app</div>;
+  return (
+    <FullWidthCard>
+      <CardContent className="leading-normal"></CardContent>
+    </FullWidthCard>
+  );
 }

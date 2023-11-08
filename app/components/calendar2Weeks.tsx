@@ -60,11 +60,10 @@ const isSameDay = (date1: Date, date2: Date) => {
 
 const getDays = (events: Event[]): DayDto[] => {
   const todayDate = new Date();
-  const day = todayDate.getDay();
   const days = [...Array(15).keys()];
   const dayDtos = days.map<DayDto>((d) => {
     const currentDay = new Date(todayDate);
-    currentDay.setDate(todayDate.getDate() - day + d);
+    currentDay.setDate(todayDate.getDate() + d);
     return {
       title: capitalizeString(
         currentDay.toLocaleDateString("sk-SK", { weekday: "long" }),

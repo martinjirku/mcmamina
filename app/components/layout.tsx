@@ -50,7 +50,7 @@ export const Layout: FC<PropsWithChildren<LyoutProps>> = ({
   const [isOpen, toggleOpen] = useReducer((v: boolean) => !v, false);
   return (
     <div className="h-screen flex flex-col">
-      <header className="w-full z-50 bg-indigo-400 sticky shadow-lg top-0 text-cyan-50">
+      <header className="w-full z-50 bg-indigo-400 sticky shadow-lg top-0 text-cyan-50 text-xl">
         <nav className="hidden md:flex justify-around py-6" aria-label="Hlavné">
           <ul className="flex gap-6">
             <MenuItem to="/">Domov</MenuItem>
