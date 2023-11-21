@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
+import { ActivitiesPresentation } from "~/components/activitiesPresentation";
 import { Logo } from "~/components/animatedLogo";
 import { TwoWeeksCalendar, Event } from "~/components/calendar2Weeks";
 import { HorizontalDelimiter } from "~/components/delimiter";
@@ -32,7 +33,7 @@ export default function Index() {
       className="w-full bg-cover bg-center text-indigo-800 font-light"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <FullWidthCard>
+      <FullWidthCard margin="mb-0 mt-12">
         <CardContent className="flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center">
           <div className="flex-grow md:max-w-xs flex justify-around items-center">
             <Logo className="w-48 lg:w-64" animated />
@@ -53,7 +54,12 @@ export default function Index() {
           </div>
         </CardContent>
       </FullWidthCard>
-      <FullWidthCard>
+      <FullWidthCard background="bg-indigo-950" padding="px-5" margin="mt-0">
+        <CardContent className="flex columns-2 text-indigo-800">
+          <ActivitiesPresentation />
+        </CardContent>
+      </FullWidthCard>
+      <FullWidthCard margin="mt-0 mb-12">
         <CardContent>
           <h1 className="text-xxl font-semibold">Príspevky na chod</h1>
           <HorizontalDelimiter />
