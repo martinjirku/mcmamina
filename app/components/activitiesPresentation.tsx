@@ -5,7 +5,7 @@ import dielnicky from "~/images/dielnicky.jpg";
 import hraveCvicenie from "~/images/hrave-cvicenie.jpg";
 import tinka from "~/images/TINKA.jpg";
 import classes from "./activitiesPresentation.module.css";
-
+import { Phone, Mail, Facebook } from "./icons";
 interface ImageProps {
   src: string;
   active?: boolean;
@@ -50,63 +50,95 @@ const Image: FC<ImageProps> = ({
   );
 };
 
-export const ActivitiesPresentation = () => {
-  const [active, setActive] = useState(0);
-  let content = null;
-  if (active === 0) {
-    content = (
-      <div className="">
-        <h1 className="text-2xl underline-offset-1 underline pb-5">
-          Montessori hernička
-        </h1>
-        <p>
-          Zážitkový a vzdelávací program pre najmenších od 2 do 4 rokov
-          inšpirovaný princípmi Montessori pedagogiky.
-        </p>
+interface ActivityProps {
+  title: string;
+  children: React.ReactNode;
+  contact: { email?: string; phone?: string; fb?: string };
+  time: string;
+}
+export const ActivityContent: FC<ActivityProps> = (props) => {
+  let email: React.ReactNode, phone: React.ReactNode, fb: React.ReactNode;
+  if (props.contact.email) {
+    email = (
+      <div className="w-full">
+        <a href={`mailto:${props.contact.email}`}>
+          <Mail className="fill-indigo-100 mr-2" dimension={16} />
+          {props.contact.email}
+        </a>
       </div>
     );
   }
-  if (active === 1) {
-    content = (
-      <div className="">
-        <h1 className="text-2xl underline-offset-1 underline pb-5">
-          Angličtina s Tinkou
-        </h1>
-        <p>Tinka vedie krúžok angličtiny hravou a prirodzenou cestou.</p>
+  if (props.contact.phone) {
+    phone = (
+      <div className="w-full">
+        <a href={`tel:${props.contact.phone}`}>
+          <Phone className="fill-indigo-100 mr-2" dimension={16} />
+          {props.contact.phone}
+        </a>
       </div>
     );
   }
-  if (active === 2) {
-    content = (
-      <div className="">
-        <h1 className="text-2xl underline-offset-1 underline pb-5">
-          Happy gym
-        </h1>
-        <p>
-          Cvičenie pre najmenších každý utorok od 8:45 hod. v troch skupinkách.
-          Cvičenie je zamerané na psychomotorický, sociálny, citový a rozumový
-          vývoj dieťaťa.
-        </p>
-      </div>
-    );
-  }
-  if (active === 3) {
-    content = (
-      <div className="">
-        <h1 className="text-2xl underline-offset-1 underline pb-5">
-          Tanečno - pohybová príprava
-        </h1>
-        <p>
-          Cieľom u detí je získať hravou formou - správne držanie tela,
-          hudobno-pohybové cítenie, zamerať sa na rytmus, tempo, takt, dynamiku,
-          frázovanie a iné.
-        </p>
+  if (props.contact.fb) {
+    fb = (
+      <div className="w-full">
+        <a href={props.contact.fb}>
+          <Facebook className="fill-indigo-100 mr-2" dimension={16} />
+          Prihlasovanie na FB
+        </a>
       </div>
     );
   }
   return (
-    <div className="w-full flex flex-col">
-      <div className="w-full flex flex-row">
+    <div className="w-full relative flex flex-row gap-4">
+      <div className="flex-grow flex-shrink">
+        <h1 className="text-2xl underline-offset-1 underline pb-5">
+          {props.title}
+        </h1>
+        <p>{props.children}</p>
+      </div>
+      <div className="w-72 flex-grow-0 flex-shrink-0">
+        <h1 className="text-lg underline-offset-1 underline pb-2">Kontakt</h1>
+        {email}
+        {phone}
+        {fb}
+        <h1 className="text-lg underline-offset-1 underline pb-2 pt-3">
+          Aktivity
+        </h1>
+        <div className="w-full">{props.time}</div>
+      </div>
+    </div>
+  );
+};
+
+interface ContentItemProps {
+  children: React.ReactNode;
+  active: boolean;
+}
+const Content: FC<ContentItemProps> = ({ children, active }) => {
+  return (
+    <div
+      className={`w-full overflow-none transition-all duration-500 ease-in-out transform absolute ${
+        active ? "translate-x-0 opacity-1" : "translate-x-full opacity-0"
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const ActivitiesPresentation = () => {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActive((active + 1) % 4);
+    }, 5e3);
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [active]);
+  return (
+    <div className="w-full flex flex-col relative">
+      <div className="relative flex flex-row">
         {[dielnicky, tinka, hraveCvicenie, dancingKid].map((src, idx, arr) => (
           <Image
             key={src}
@@ -118,35 +150,59 @@ export const ActivitiesPresentation = () => {
           />
         ))}
       </div>
-      <div className="w-full text-white text-lg py-10">{content}</div>
-    </div>
-  );
-};
-
-interface ArrowProps {
-  color: string;
-  children: React.ReactNode;
-}
-const Arrow: FC<ArrowProps> = ({ color, children }) => {
-  return (
-    <div className={`group p-2 h-14 pr-14 ${color} cursor-pointer relative`}>
-      {children}
-      <div className="absolute right-2 top-2 group-hover:translate-x-7 transition-transform duration-200 ease-in-out ">
-        <div className={`${color} h-10 w-10 transform rotate-45`}></div>
+      <div className="w-full relative  text-white text-lg my-8 h-48 overflow-hidden">
+        <Content active={active === 0}>
+          <ActivityContent
+            title="Montessori hernička"
+            contact={{
+              phone: "+421 948 523 493",
+              fb: "https://www.facebook.com/MaterskeCentrumMamina/",
+            }}
+            time="Každý piatok o 9:30."
+          >
+            Zážitkový a vzdelávací program pre najmenších od 2 do 4 rokov
+            inšpirovaný princípmi Montessori pedagogiky.
+          </ActivityContent>
+        </Content>
+        <Content active={active === 1}>
+          <ActivityContent
+            title="Angličtina s Tinkou"
+            contact={{
+              phone: "+421 907 948 207",
+              email: "anglictinamcmamina@gmail.com",
+            }}
+            time="Utorok o 16:30 v 3 skupinách a štvrtok o 10:00"
+          >
+            Tinka vedie krúžok angličtiny hravou a prirodzenou cestou.
+          </ActivityContent>
+        </Content>
+        <Content active={active === 2}>
+          <ActivityContent
+            title="Happy gym"
+            contact={{
+              phone: "+421 907 228 779",
+              email: "happygymzv@gmail.com ",
+            }}
+            time="Utorok o 8:45 v troch skupinkách"
+          >
+            Cvičenie pre najmenších zamerané na psychomotorický, sociálny,
+            citový a rozumový vývoj dieťaťa.
+          </ActivityContent>
+        </Content>
+        <Content active={active === 3}>
+          <ActivityContent
+            title="Tanečno - pohybová príprava"
+            contact={{
+              email: "tkelement@tkelement.com",
+            }}
+            time="Pondelok o 16:00 v dvoch skupinkách"
+          >
+            Cieľom u detí je získať hravou formou - správne držanie tela,
+            hudobno-pohybové cítenie, zamerať sa na rytmus, tempo, takt,
+            dynamiku, frázovanie a iné.
+          </ActivityContent>
+        </Content>
       </div>
     </div>
-  );
-};
-export const ActivitiesPresentationOld = () => {
-  return (
-    <>
-      <div className="flex flex-col relative">
-        <Arrow color="bg-cyan-300">Montessori hernička</Arrow>
-        <Arrow color="bg-lime-300">Angličtina s Tinkou</Arrow>
-        <Arrow color="bg-orange-300">Happy Gym</Arrow>
-        <Arrow color="bg-fuchsia-300">Cvičenie pre tehotné</Arrow>
-      </div>
-      <div>The rest</div>
-    </>
   );
 };
