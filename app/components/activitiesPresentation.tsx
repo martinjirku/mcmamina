@@ -10,37 +10,19 @@ interface ImageProps {
   src: string;
   active?: boolean;
   onClick: () => void;
-  onNext?: () => void;
-  onPrev?: () => void;
 }
-const Image: FC<ImageProps> = ({
-  src,
-  active = false,
-  onClick,
-  onNext,
-  onPrev,
-}) => {
+const Image: FC<ImageProps> = ({ src, active = false, onClick }) => {
   const wrapperClasses =
     "h-44 outline-none flex-grow cursor-pointer overflow-hidden";
   const bgClasses = `${classes.image} h-full w-full hover:scale-125 bg-cover transform transition duration-500`;
   const activeClasses = active ? "scale-125" : "filter grayscale grayscale-100";
-  const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = (e) => {
-    if (e.key === "ArrowRight") onNext?.();
-    if (e.key === "ArrowLeft") onPrev?.();
-    if (e.key === "enter") onClick();
-  };
   const btn = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (active) btn.current?.focus();
-  }, [active]);
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <button
       ref={btn}
       className={wrapperClasses}
-      tabIndex={active ? 0 : -1}
-      onKeyDown={handleKeyDown}
       onClick={onClick}
+      tabIndex={-1}
     >
       <div
         className={`${bgClasses} ${activeClasses}`}
@@ -136,17 +118,26 @@ export const ActivitiesPresentation = () => {
       window.clearInterval(interval);
     };
   }, [active]);
+  const images = [dielnicky, tinka, hraveCvicenie, dancingKid];
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === "ArrowRight") setActive((active + 1) % images.length);
+    if (e.key === "ArrowLeft")
+      setActive((active - 1 + images.length) % images.length);
+  };
   return (
     <div className="w-full flex flex-col relative">
-      <div className="relative flex flex-row">
-        {[dielnicky, tinka, hraveCvicenie, dancingKid].map((src, idx, arr) => (
+      <div
+        role="menu"
+        className="relative flex flex-row"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
+        {images.map((src, idx) => (
           <Image
             key={src}
             src={src}
             active={active === idx}
             onClick={() => setActive(idx)}
-            onNext={() => setActive((idx + 1) % arr.length)}
-            onPrev={() => setActive((idx - 1 + arr.length) % arr.length)}
           />
         ))}
       </div>
