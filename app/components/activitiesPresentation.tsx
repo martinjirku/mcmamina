@@ -8,14 +8,15 @@ import classes from "./activitiesPresentation.module.css";
 import { Phone, Mail, Facebook } from "./icons";
 interface ImageProps {
   src: string;
+  title: string;
   active?: boolean;
   onClick: () => void;
 }
-const Image: FC<ImageProps> = ({ src, active = false, onClick }) => {
-  const wrapperClasses =
-    "h-44 outline-none flex-grow cursor-pointer overflow-hidden";
-  const bgClasses = `${classes.image} h-full w-full hover:scale-125 bg-cover transform transition duration-500`;
+const Image: FC<ImageProps> = ({ src, title, active = false, onClick }) => {
+  const wrapperClasses = `${classes.imageWrapper} h-44 outline-none flex-grow relative cursor-pointer overflow-hidden`;
+  const bgClasses = `${classes.image} h-full bg-cover transform transition duration-500`;
   const activeClasses = active ? "scale-125" : "filter grayscale grayscale-100";
+  const titleClasses = `${classes.title} absolute flex items-center justify-center bottom-0 text-md text-indigo-100 align-middle h-16 bg-slate-700 bg-opacity-90 w-full leading-6`;
   const btn = useRef<HTMLButtonElement>(null);
   return (
     <button
@@ -28,6 +29,7 @@ const Image: FC<ImageProps> = ({ src, active = false, onClick }) => {
         className={`${bgClasses} ${activeClasses}`}
         style={{ backgroundImage: `url(${src})` }}
       ></div>
+      <div className={titleClasses}>{title}</div>
     </button>
   );
 };
@@ -71,7 +73,7 @@ export const ActivityContent: FC<ActivityProps> = (props) => {
     );
   }
   return (
-    <div className="w-full relative flex flex-row gap-4">
+    <div className={`w-full relative flex flex-row gap-4`}>
       <div className="flex-grow flex-shrink">
         <h1 className="text-2xl underline-offset-1 underline pb-5">
           {props.title}
@@ -99,14 +101,71 @@ interface ContentItemProps {
 const Content: FC<ContentItemProps> = ({ children, active }) => {
   return (
     <div
+      aria-hidden={!active}
+      aria-disabled={!active}
       className={`w-full overflow-none transition-all duration-500 ease-in-out transform absolute ${
-        active ? "translate-x-0 opacity-1" : "translate-x-full opacity-0"
+        active
+          ? "translate-x-0 opacity-1"
+          : "translate-x-full opacity-0 mouse-events-none"
       }`}
     >
       {children}
     </div>
   );
 };
+
+interface Activity {
+  title: string;
+  img: string;
+  description: string;
+  contact: { email?: string; phone?: string; fb?: string };
+  time: string;
+}
+
+const activities: Activity[] = [
+  {
+    title: "Montessori hernička",
+    img: dielnicky,
+    contact: {
+      phone: "+421 948 523 493",
+      fb: "https://www.facebook.com/MaterskeCentrumMamina/",
+    },
+    description:
+      "Zážitkový a vzdelávací program pre najmenších od 2 do 4 rokov inšpirovaný princípmi Montessori pedagogiky.",
+    time: "Každý piatok o 9:30.",
+  },
+  {
+    title: "Angličtina s Tinkou",
+    img: tinka,
+    contact: {
+      phone: "+421 907 948 207",
+      email: "anglictinamcmamina@gmail.com",
+    },
+    description: "Tinka vedie krúžok angličtiny hravou a prirodzenou cestou.",
+    time: "Utorok o 16:30 v 3 skupinách a štvrtok o 10:00",
+  },
+  {
+    title: "Happy gym",
+    img: hraveCvicenie,
+    contact: {
+      phone: "+421 907 228 779",
+      email: "happygymzv@gmail.com ",
+    },
+    description:
+      "Cvičenie pre najmenších zamerané na psychomotorický, sociálny, citový a rozumový vývoj dieťaťa.",
+    time: "Utorok o 8:45 v troch skupinkách",
+  },
+  {
+    title: "Tanečno - pohybová príprava",
+    img: dancingKid,
+    contact: {
+      email: "tkelement@tkelement.com",
+    },
+    description:
+      "Cieľom u detí je získať hravou formou - správne držanie tela, hudobno-pohybové cítenie, zamerať sa na rytmus, tempo, takt, dynamiku, frázovanie a iné.",
+    time: "Pondelok o 16:00 v dvoch skupinkách",
+  },
+];
 
 export const ActivitiesPresentation = () => {
   const [active, setActive] = useState(0);
@@ -118,11 +177,10 @@ export const ActivitiesPresentation = () => {
       window.clearInterval(interval);
     };
   }, [active]);
-  const images = [dielnicky, tinka, hraveCvicenie, dancingKid];
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (e.key === "ArrowRight") setActive((active + 1) % images.length);
+    if (e.key === "ArrowRight") setActive((active + 1) % activities.length);
     if (e.key === "ArrowLeft")
-      setActive((active - 1 + images.length) % images.length);
+      setActive((active - 1 + activities.length) % activities.length);
   };
   return (
     <div className="w-full flex flex-col relative">
@@ -132,67 +190,24 @@ export const ActivitiesPresentation = () => {
         tabIndex={0}
         onKeyDown={handleKeyDown}
       >
-        {images.map((src, idx) => (
+        {activities.map((a, idx) => (
           <Image
-            key={src}
-            src={src}
+            key={a.img}
+            src={a.img}
+            title={a.title}
             active={active === idx}
             onClick={() => setActive(idx)}
           />
         ))}
       </div>
       <div className="w-full relative  text-white text-lg my-8 h-48 overflow-hidden">
-        <Content active={active === 0}>
-          <ActivityContent
-            title="Montessori hernička"
-            contact={{
-              phone: "+421 948 523 493",
-              fb: "https://www.facebook.com/MaterskeCentrumMamina/",
-            }}
-            time="Každý piatok o 9:30."
-          >
-            Zážitkový a vzdelávací program pre najmenších od 2 do 4 rokov
-            inšpirovaný princípmi Montessori pedagogiky.
-          </ActivityContent>
-        </Content>
-        <Content active={active === 1}>
-          <ActivityContent
-            title="Angličtina s Tinkou"
-            contact={{
-              phone: "+421 907 948 207",
-              email: "anglictinamcmamina@gmail.com",
-            }}
-            time="Utorok o 16:30 v 3 skupinách a štvrtok o 10:00"
-          >
-            Tinka vedie krúžok angličtiny hravou a prirodzenou cestou.
-          </ActivityContent>
-        </Content>
-        <Content active={active === 2}>
-          <ActivityContent
-            title="Happy gym"
-            contact={{
-              phone: "+421 907 228 779",
-              email: "happygymzv@gmail.com ",
-            }}
-            time="Utorok o 8:45 v troch skupinkách"
-          >
-            Cvičenie pre najmenších zamerané na psychomotorický, sociálny,
-            citový a rozumový vývoj dieťaťa.
-          </ActivityContent>
-        </Content>
-        <Content active={active === 3}>
-          <ActivityContent
-            title="Tanečno - pohybová príprava"
-            contact={{
-              email: "tkelement@tkelement.com",
-            }}
-            time="Pondelok o 16:00 v dvoch skupinkách"
-          >
-            Cieľom u detí je získať hravou formou - správne držanie tela,
-            hudobno-pohybové cítenie, zamerať sa na rytmus, tempo, takt,
-            dynamiku, frázovanie a iné.
-          </ActivityContent>
-        </Content>
+        {activities.map((a, idx) => (
+          <Content key={idx} active={active === idx}>
+            <ActivityContent title={a.title} contact={a.contact} time={a.time}>
+              {a.description}
+            </ActivityContent>
+          </Content>
+        ))}
       </div>
     </div>
   );
