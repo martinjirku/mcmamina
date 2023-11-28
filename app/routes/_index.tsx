@@ -54,7 +54,11 @@ export default function Index() {
           </div>
         </CardContent>
       </FullWidthCard>
-      <FullWidthCard background="bg-indigo-950" padding="px-5" margin="mt-0">
+      <FullWidthCard
+        background="bg-indigo-950"
+        padding="px-0 md:px-5"
+        margin="mt-0"
+      >
         <CardContent className="flex columns-2 text-indigo-800">
           <ActivitiesPresentation />
         </CardContent>

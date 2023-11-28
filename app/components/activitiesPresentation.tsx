@@ -16,7 +16,7 @@ const Image: FC<ImageProps> = ({ src, title, active = false, onClick }) => {
   const wrapperClasses = `${classes.imageWrapper} h-44 outline-none flex-grow relative cursor-pointer overflow-hidden`;
   const bgClasses = `${classes.image} h-full bg-cover transform transition duration-500`;
   const activeClasses = active ? "scale-125" : "filter grayscale grayscale-100";
-  const titleClasses = `${classes.title} absolute flex items-center justify-center bottom-0 text-md text-indigo-100 align-middle h-16 bg-slate-700 bg-opacity-90 w-full leading-6`;
+  const titleClasses = `${classes.title} inline-block px-2 text-ellipsis overflow-hidden break-all absolute flex items-center justify-center bottom-0 text-md text-indigo-100 align-middle h-24 sm:h-18 md:h-16 bg-slate-700 bg-opacity-90 w-full leading-6`;
   const btn = useRef<HTMLButtonElement>(null);
   return (
     <button
@@ -73,14 +73,16 @@ export const ActivityContent: FC<ActivityProps> = (props) => {
     );
   }
   return (
-    <div className={`w-full relative flex flex-row gap-4`}>
-      <div className="flex-grow flex-shrink">
+    <div
+      className={`w-full relative flex flex-wrap md:flex-nowrap flex-row gap-4`}
+    >
+      <div className="w-full md:w-auto flex-grow flex-shrink">
         <h1 className="text-2xl underline-offset-1 underline pb-5">
           {props.title}
         </h1>
         <p>{props.children}</p>
       </div>
-      <div className="w-72 flex-grow-0 flex-shrink-0">
+      <div className="w-full md:w-72 flex-grow-0 flex-shrink-0">
         <h1 className="text-lg underline-offset-1 underline pb-2">Kontakt</h1>
         {email}
         {phone}
@@ -200,7 +202,7 @@ export const ActivitiesPresentation = () => {
           />
         ))}
       </div>
-      <div className="w-full relative  text-white text-lg my-8 h-48 overflow-hidden">
+      <div className="w-full relative  text-white text-lg px-5 md:px-0 my-8 h-80 md:h-48 overflow-hidden">
         {activities.map((a, idx) => (
           <Content key={idx} active={active === idx}>
             <ActivityContent title={a.title} contact={a.contact} time={a.time}>
