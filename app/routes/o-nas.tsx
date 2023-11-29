@@ -26,11 +26,11 @@ export default function ONasPage() {
         padding="px-0 pt-12 pb-24 md:px-5"
         margin="mt-0 mb-24"
       >
-        <CardContent className="text-indigo-800">
+        <CardContent className="text-indigo-800 px-2 sm:px-5 md:px-0">
           <h1 className="text-4xl font-semibold mb-10 text-center">
             Niečo o nás
           </h1>
-          <p className="text-xl text-left">
+          <p className="text-xl text-justify md:text-left">
             Materské centrum Mamina je nezisková organizácia, ktorá vznikla v
             roku 2004. Vznikla ako potreba stretávať sa v bezpečnom prostredí a
             zmysluplne tráviť čas so svojimi deťmi na materskej, či rodičovskej
