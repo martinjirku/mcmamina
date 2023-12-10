@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ES2023"
+        ],
+        "moduleResolution": "Bundler",
+        "target": "ESNext",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "sourceMap": true,
+        "types": []
+    },
+    "include": [
+        "components/**/*.ts",
+        "node_modules/**/*.ts"
+    ]
+}

@@ -1,0 +1,19 @@
+package components
+
+templ FullWidthCard(props FullWidthCardDto) {
+	<div class={
+		"w-full bg-opacity-95 text-xl leading-10 flex justify-around",
+		props.class,
+		props.background,
+		props.padding,
+		props.margin,
+	}>
+		{ children... }
+	</div>
+}
+
+templ CardContent(class string) {
+	<div class={ "w-full bg-opacity-95 text-xl leading-10 flex justify-around", class }>
+		{ children... }
+	</div>
+}

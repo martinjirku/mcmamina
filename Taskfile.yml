@@ -1,0 +1,30 @@
+version: '3'
+
+tasks:
+  default:
+    deps: [templwatch, csswatch, serverwatch, tswatch]
+  install:
+    cmds:
+      - go install github.com/cosmtrek/air@latest
+      - go install github.com/a-h/templ/cmd/templ@latest
+      - npm install --silent
+
+  templwatch:
+    cmds:
+      - templ generate --watch
+  csswatch:
+    cmds:
+      - npx tailwindcss -i ./styles/main.css -o ./public/main.css --watch
+  tswatch:
+    cmds:
+      - npx vite build -w
+  serverwatch:
+    cmds:
+      - air --build.cmd "go build -o ./tmp/main ./cmd/web/main.go"
+
+  buildserver:
+    cmds:
+      - go build -v -i main.go
+  buildassets:
+    cmds:
+      - esbuild --bundle --minify css/index.css > public/bundle.css
