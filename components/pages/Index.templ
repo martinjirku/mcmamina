@@ -11,7 +11,19 @@ templ IndexPage() {
 	@layout.Layout(templ.CSSClasses{"w-full bg-cover bg-center text-indigo-800 font-light", IndexCss()}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0 mt-12")) {
 			@components.CardContent("flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center") {
-				Content3
+				<div class="flex-grow md:max-w-xs flex justify-around items-center">
+					@components.AnimatedLogo("w-48 lg:w-64", "", true)
+				</div>
+				<div class="flex-grow md:max-w-xl gap-6 flex flex-col items-center justify-evenly text-center">
+					<span>
+						Naše centrum je pre Vás otvorené každý pracovný deň v čase 9:00 - 12:30 a 16:00 - 19:00
+						(v piatky iba doobeda). Najbližšie akcie nájdete v našom 
+						<a class="underline underline-offset-4" href="/kalendar">kalendári</a>. Najbližšie dni nás čaká:
+					</span>
+					<div class="w-full w-grow">
+						<twoWeeksCalendar></twoWeeksCalendar>
+					</div>
+				</div>
 			}
 		}
 	}

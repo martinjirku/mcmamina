@@ -1,0 +1,42 @@
+svg.mcmamina-logo {
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 1.5;
+	cursor: pointer;
+}
+
+svg.mcmamina-logo.mcmamina-animate #heart,
+svg.mcmamina-logo.mcmamina-animate #egg {
+	transform-origin: center;
+	animation: swing 1.8s ease-in-out infinite paused;
+}
+svg.mcmamina-logo.mcmamina-animate #heart {
+	animation: beat 1s ease-in-out infinite;
+}
+svg.mcmamina-logo.mcmamina-animate:hover #egg {
+	animation-play-state: running;
+}
+
+@keyframes swing {
+	0% {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(20deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+@keyframes beat {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
