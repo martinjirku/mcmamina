@@ -15,7 +15,7 @@ type DefaultHandler struct {
 type ViewProps struct{}
 
 func (h *DefaultHandler) View(w http.ResponseWriter, r *http.Request, props ViewProps) {
-	components.Page(components.NewPage("Root", "Domov", pages.RootPage())).Render(r.Context(), w)
+	components.Page(components.NewPage("Index", "Domov", pages.IndexPage())).Render(r.Context(), w)
 }
 
 func (h *DefaultHandler) Get(w http.ResponseWriter, r *http.Request) {

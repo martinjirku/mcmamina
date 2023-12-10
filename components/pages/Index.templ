@@ -3,12 +3,12 @@ package pages
 import "jirku.sk/mcmamina/components/layout"
 import "jirku.sk/mcmamina/components"
 
-css RootCss() {
+css IndexCss() {
 	background-image: url("/images/crayons-1445053_640.jpg");
 }
 
-templ RootPage() {
-	@layout.Layout(templ.CSSClasses{"w-full bg-cover bg-center text-indigo-800 font-light", RootCss()}) {
+templ IndexPage() {
+	@layout.Layout(templ.CSSClasses{"w-full bg-cover bg-center text-indigo-800 font-light", IndexCss()}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0 mt-12")) {
 			@components.CardContent("flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center") {
 				Content3

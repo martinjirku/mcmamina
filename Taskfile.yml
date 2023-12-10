@@ -2,7 +2,7 @@ version: '3'
 
 tasks:
   default:
-    deps: [templwatch, csswatch, serverwatch, tswatch]
+    deps: [tswatch, templwatch, csswatch, serverwatch]
   install:
     cmds:
       - go install github.com/cosmtrek/air@latest
@@ -14,7 +14,7 @@ tasks:
       - templ generate --watch
   csswatch:
     cmds:
-      - npx tailwindcss -i ./styles/main.css -o ./public/main.css --watch
+      - npx tailwindcss -i ./styles/main.css -o ./dist/main.css --watch
   tswatch:
     cmds:
       - npx vite build -w

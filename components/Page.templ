@@ -1,18 +1,18 @@
 package components
 
-
 templ Page(props pageDto) {
 	<html lang="sk" class="h-full overflow-x-clip">
 		<head>
 			<meta charSet="utf-8"/>
 			<meta name="viewport" content="width=device-width,initial-scale=1"/>
-			<title>{props.title}</title>
-			<link rel="stylesheet" href="/main.css"/>
-			<link rel="icon" href="/images/favicon.ico" />
+			<title>{ props.title }</title>
+			<link rel="stylesheet" href="/dist/main.css"/>
+			<link rel="stylesheet" href="/pages.css"/>
+			<link rel="icon" href="/images/favicon.ico"/>
 		</head>
 		<body class="h-full">
 			@props.Content
-			<script src={"/" + props.ID + ".mjs"} />
+			<script src={ "/dist/" + props.ID + ".mjs" }></script>
 		</body>
 	</html>
 }
