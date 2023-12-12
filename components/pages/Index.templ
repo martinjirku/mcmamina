@@ -1,13 +1,22 @@
 package pages
 
-import "jirku.sk/mcmamina/components/layout"
-import "jirku.sk/mcmamina/components"
+import (
+	"time"
+	"jirku.sk/mcmamina/components/layout"
+	"jirku.sk/mcmamina/components"
+	"jirku.sk/mcmamina/models"
+)
 
 css IndexCss() {
 	background-image: url("/images/crayons-1445053_640.jpg");
 }
 
-templ IndexPage() {
+type IndexPageDto struct {
+	Days  []models.Day
+	Today time.Time
+}
+
+templ IndexPage(dto IndexPageDto) {
 	@layout.Layout(templ.CSSClasses{"w-full bg-cover bg-center text-indigo-800 font-light", IndexCss()}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0 mt-12")) {
 			@components.CardContent("flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center") {
@@ -21,7 +30,7 @@ templ IndexPage() {
 						<a class="underline underline-offset-4" href="/kalendar">kalendári</a>. Najbližšie dni nás čaká:
 					</span>
 					<div class="w-full w-grow">
-						<twoWeeksCalendar></twoWeeksCalendar>
+						@components.TwoWeeksCalendar(dto.Days, dto.Today)
 					</div>
 				</div>
 			}

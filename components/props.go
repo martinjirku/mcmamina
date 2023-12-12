@@ -1,6 +1,8 @@
 package components
 
-import "github.com/a-h/templ"
+import (
+	"github.com/a-h/templ"
+)
 
 type FullWidthCardDto struct {
 	class      string
