@@ -8,6 +8,30 @@ type Event struct {
 	End   time.Time
 }
 
+func NewEvent(title string) *Event {
+	return &Event{
+		Title: title,
+	}
+}
+
+func (e *Event) SetStart(t string) *Event {
+	start, err := time.Parse(time.RFC3339, t)
+	if err != nil {
+		return e
+	}
+	e.Start = start
+	return e
+}
+
+func (e *Event) SetEnd(t string) *Event {
+	end, err := time.Parse(time.RFC3339, t)
+	if err != nil {
+		return e
+	}
+	e.End = end
+	return e
+}
+
 type Day struct {
 	Date   time.Time
 	Events []Event

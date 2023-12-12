@@ -4,3 +4,5 @@ components/**/*_templ.go
 public/
 tmp/
 dist/
+.env
+vendor/**/*
