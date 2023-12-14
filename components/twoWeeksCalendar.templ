@@ -6,7 +6,7 @@ import (
 )
 
 templ TwoWeeksCalendar(days []models.Day, today time.Time) {
-	<div class="sm:w-full scroll-m-0 text-right">
+	<div class="sm:w-full scroll-m-0 text-right two-weeks-calendar">
 		<div class="w-full grid grid-cols-5 gap-2 text-indigo-500">
 			for _, item := range days {
 				@Day(item, today)
@@ -17,12 +17,11 @@ templ TwoWeeksCalendar(days []models.Day, today time.Time) {
 
 templ Day(day models.Day, today time.Time) {
 	<div
- 		class={
-			"group h-16 flex flex-col border hover:scale-105 scale-100 ",
+ 		class={ "group h-16 flex flex-col border hover:scale-105 scale-100 relative",
 			"transition-transform duration-500 ease-in-out border-indigo-300 rounded-lg ",
 			templ.KV("border-indigo-500", day.Is(today)),
 			templ.KV("bg-indigo-200", day.IsWeekend()),
-		}
+            "day-wrapper " + day.GetDateIdentifier() }
  		if day.HasEvents() {
 			tabindex="0"
 		}
@@ -51,4 +50,21 @@ templ Day(day models.Day, today time.Time) {
 			</div>
 		</div>
 	</div>
+	if day.HasEvents() {
+		<div
+ 			class={ "transition-all duration-500 w-fit text-left text-sm",
+				"bg-indigo-500 text-indigo-100 p-2 z-10 rounded-md",
+				"opacity-0 pointer-events-none w-max z-10 relative",
+				"event-tooltip " + day.GetDateIdentifier() }
+ 			style="position: absolute;"
+		>
+			<h1>{ day.GetFormatedDate() } - { day.GetTitle() }</h1>
+			<ul>
+				for _, event := range day.Events {
+					<li>{ event.RenderEventRange(day.Date) } - { event.Title }</li>
+				}
+			</ul>
+			<div class="arrow absolute bg-indigo-500 w-6 h-6 pointer-events-none rotate-45"></div>
+		</div>
+	}
 }

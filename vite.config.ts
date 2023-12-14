@@ -1,20 +1,23 @@
-import { defineConfig } from 'vite';
-import glob from 'fast-glob';
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 
 export default defineConfig((config) => {
-    return {
-        plugins: [],
-        build: {
-            outDir: 'dist',
-            ssr: true,
-            target: 'esnext',
-            lib: {
-                entry: glob.sync(['components/**/*.ts']),
-                formats: ['es'],
-            },
-            sourcemap: true,
-            minify: true,
+  return {
+    plugins: [splitVendorChunkPlugin()],
+    appType: "custom",
+    build: {
+      target: "modules",
+      sourcemap: true,
+      minify: true,
+      cssCodeSplit: false,
+      manifest: true,
+      rollupOptions: {
+        input: ["components/pages/Index.ts"],
+        output: {
+          dir: "dist",
+          format: "es",
+          entryFileNames: "[name].[format]",
         },
-        assetsInclude: ['assets/**/*', 'assets/*'],
-    };
+      },
+    },
+  };
 });

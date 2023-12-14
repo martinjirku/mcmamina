@@ -1,2 +1,2 @@
-
-console.log('test');
+import "../animatedLogo.css";
+import "../twoWeeksCalendar";

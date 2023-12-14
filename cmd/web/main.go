@@ -3,12 +3,14 @@ package main
 import (
 	"log/slog"
 	"net/http"
+	"path/filepath"
 
 	"github.com/a-h/templ"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"jirku.sk/mcmamina/components/pages"
 	"jirku.sk/mcmamina/handlers"
+	"jirku.sk/mcmamina/services"
 )
 
 // .env keys
@@ -19,28 +21,27 @@ const (
 
 func main() {
 	log := slog.Default()
-	router := mux.NewRouter()
-
 	var env map[string]string
 	env, err := godotenv.Read()
 	if err != nil {
 		log.Error("Error loading .env file", slog.Any("error", err))
 	}
+	calendarService := services.NewCalendarService(env[GOOGLE_API_KEY], env[GOOGLE_CALENDAR_ID])
+	setupWebserver(log, calendarService)
 
-	handleFiles(router, "/images/", "./assets/images")
-	handleFiles(router, "/dist/", "./dist")
-	router.HandleFunc("/", defaultHandler(log, env[GOOGLE_API_KEY], env[GOOGLE_CALENDAR_ID]).ServeHTTP)
-	router.HandleFunc("/pages.css", CssHandler())
-	http.ListenAndServe("localhost:3000", router)
 }
 
-func defaultHandler(log *slog.Logger, apiKey, calendarID string) http.Handler {
-	defaultHandler := handlers.DefaultHandler{
-		Log:        log,
-		ApiKey:     apiKey,
-		CalendarID: calendarID,
-	}
-	return &defaultHandler
+func setupWebserver(log *slog.Logger, calendarService *services.CalendarService) {
+	router := mux.NewRouter()
+	distPath := "/dist"
+	cssService := services.NewCSS(distPath)
+
+	handleFiles(router, "/images/", "./assets/images")
+	handleFiles(router, distPath+"/", "."+distPath)
+
+	router.HandleFunc("/", handlers.NewdefaultHandler(log, calendarService, cssService).ServeHTTP)
+	router.HandleFunc("/pages.css", CssHandler())
+	http.ListenAndServe("localhost:3000", router)
 }
 
 func CssHandler() func(http.ResponseWriter, *http.Request) {
@@ -49,6 +50,35 @@ func CssHandler() func(http.ResponseWriter, *http.Request) {
 }
 
 func handleFiles(r *mux.Router, path, dir string) {
-	handler := http.StripPrefix(path, http.FileServer(http.Dir(dir)))
-	r.PathPrefix(path).Handler(handler)
+	fs := http.StripPrefix(path, http.FileServer(http.Dir(dir)))
+
+	r.PathPrefix(path).Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		filePath := filepath.Join("your_directory_path", r.URL.Path)
+		contentType := getContentType(filePath)
+		w.Header().Set("Content-Type", contentType)
+		fs.ServeHTTP(w, r)
+	}))
+}
+
+func getContentType(filePath string) string {
+	// Default to "text/plain" if MIME type cannot be determined
+	contentType := "text/plain"
+
+	// Map file extensions to MIME types
+	mimeTypes := map[string]string{
+		".es":  "application/javascript",
+		".js":  "application/javascript",
+		".css": "text/css",
+		// Add more MIME types as needed
+	}
+
+	// Get the file extension
+	ext := filepath.Ext(filePath)
+
+	// Look up the MIME type in the map
+	if mt, ok := mimeTypes[ext]; ok {
+		contentType = mt
+	}
+
+	return contentType
 }

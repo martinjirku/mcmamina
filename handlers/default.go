@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"time"
@@ -8,13 +9,28 @@ import (
 	"jirku.sk/mcmamina/components"
 	"jirku.sk/mcmamina/components/pages"
 	"jirku.sk/mcmamina/models"
-	"jirku.sk/mcmamina/services"
 )
 
+type EventsGetter interface {
+	GetEvents(ctx context.Context, fromDate, toDate time.Time) ([]models.Event, error)
+}
+
+type CSSPathGetter interface {
+	GetCssPath() (string, error)
+}
 type DefaultHandler struct {
-	Log        *slog.Logger
-	ApiKey     string
-	CalendarID string
+	Log           *slog.Logger
+	EventsGetter  EventsGetter
+	cssPathGetter CSSPathGetter
+}
+
+func NewdefaultHandler(log *slog.Logger, getter EventsGetter, cssPathGetter CSSPathGetter) http.Handler {
+	defaultHandler := DefaultHandler{
+		Log:           log,
+		EventsGetter:  getter,
+		cssPathGetter: cssPathGetter,
+	}
+	return &defaultHandler
 }
 
 type ViewProps struct {
@@ -23,9 +39,11 @@ type ViewProps struct {
 }
 
 func (h *DefaultHandler) View(w http.ResponseWriter, r *http.Request, props ViewProps) {
+	cssPath, _ := h.cssPathGetter.GetCssPath()
 	components.Page(components.NewPage(
 		"Index",
 		"Domov",
+		cssPath,
 		pages.IndexPage(pages.IndexPageDto{
 			Days:  props.days,
 			Today: props.today,
@@ -39,8 +57,7 @@ func (h *DefaultHandler) Get(w http.ResponseWriter, r *http.Request) {
 		days:  models.GetNumberOfDaysAfter(time.Now(), 15),
 		today: time.Now(),
 	}
-	events, err := services.
-		NewCalendarService(h.ApiKey, h.CalendarID).
+	events, err := h.EventsGetter.
 		GetEvents(r.Context(), props.days[0].Date, props.days[len(props.days)-1].Date)
 	if err != nil {
 		h.Log.Error("failed to get events", slog.Any("error", err))

@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "keywords": [],
   "author": "",
+  "type": "module",
   "devDependencies": {
     "fast-glob": "^3.3.2",
     "tailwindcss": "^3.3.6",
@@ -11,6 +12,7 @@
     "vite": "^5.0.7"
   },
   "dependencies": {
+    "@floating-ui/core": "^1.5.2",
     "@floating-ui/dom": "^1.5.3",
     "htmx": "^0.0.2"
   }

@@ -2,14 +2,18 @@ package models
 
 import "time"
 
+func IsSameDay(d, t time.Time) bool {
+	return d.Year() == t.Year() && d.Month() == t.Month() && d.Day() == t.Day()
+}
+
 type Event struct {
 	Title string
 	Start time.Time
 	End   time.Time
 }
 
-func NewEvent(title string) *Event {
-	return &Event{
+func NewEvent(title string) Event {
+	return Event{
 		Title: title,
 	}
 }
@@ -30,6 +34,20 @@ func (e *Event) SetEnd(t string) *Event {
 	}
 	e.End = end
 	return e
+}
+
+func (e *Event) RenderEventRange(currentDay time.Time) string {
+	var Label string
+	if !IsSameDay(e.Start, currentDay) {
+		Label += e.Start.Format("02. 01. 2006 ")
+	}
+	Label += e.Start.Format("15:04")
+	Label += " - "
+	if !IsSameDay(e.End, currentDay) {
+		Label += e.End.Format("02. 01. 2006 ")
+	}
+	Label += e.End.Format("15:04")
+	return Label
 }
 
 type Day struct {
@@ -99,7 +117,7 @@ func (d *Day) AddEvent(event Event) {
 }
 
 func (d *Day) Is(t time.Time) bool {
-	return d.Date.Year() == t.Year() && d.Date.Month() == t.Month() && d.Date.Day() == t.Day()
+	return IsSameDay(d.Date, t)
 }
 
 func (d *Day) IsWeekend() bool {
@@ -116,4 +134,12 @@ func (d *Day) HasEvents() bool {
 
 func (d *Day) GetDay() string {
 	return d.Date.Format("2")
+}
+
+func (d *Day) GetFormatedDate() string {
+	return d.Date.Format("02. 01. 2006")
+}
+
+func (d *Day) GetDateIdentifier() string {
+	return "day-" + d.Date.Format("2006-01-02")
 }
