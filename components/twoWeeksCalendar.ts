@@ -35,17 +35,29 @@ document
         offset(7),
         autoPlacement(),
         shift(),
-        arrow({ element: arrowRef }),
+        arrow({ element: arrowRef, padding: 3 }),
       ],
-    }).then(({ x, y, middlewareData: { arrow } }) => {
+    }).then(({ x, y, middlewareData: { arrow }, placement }) => {
       Object.assign(tooltip.style, {
         left: `${x}px`,
         top: `${y}px`,
       });
       if (arrow !== undefined) {
         Object.assign(arrowRef.style, {
-          left: `${arrow.x}px`,
-          top: `${arrow.y}px`,
+          left:
+            placement === "right"
+              ? "-3px"
+              : arrow?.x != null
+              ? `${arrow.x}px`
+              : "",
+          right: placement === "left" ? "-3px" : "",
+          top:
+            placement === "bottom"
+              ? "-3px"
+              : arrow?.y != null
+              ? `${arrow.y}px`
+              : "",
+          bottom: placement === "top" ? "-3px" : "",
         });
       }
     });
