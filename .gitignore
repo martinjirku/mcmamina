@@ -1,6 +1,6 @@
 node_modules/
-components/*_templ.go
-components/**/*_templ.go
+*_templ.go
+**/*_templ.go
 public/
 tmp/
 dist/
