@@ -36,5 +36,55 @@ templ IndexPage(dto IndexPageDto) {
 				@components.ActivitiesPresentation()
 			}
 		}
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mt-0 mb-12")) {
+			@components.CardContent("") {
+				<h1 class="text-xxl font-semibold">Príspevky na chod</h1>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-4"/>
+				<div class="grid grid-cols-2 gap-10">
+					<div class="col-span-2 sm:col-span-1">
+						<h2 class="">Do herne</h2>
+						<table class="text-sm">
+							<tbody>
+								<tr>
+									<td class="p-1">0 do 1 rok</td>
+									<td class="p-1">1€</td>
+								</tr>
+								<tr>
+									<td class="p-1">1 rok a viac</td>
+									<td class="p-1">3€</td>
+								</tr>
+								<tr>
+									<td class="p-1">(Najviac však za 2 deti)</td>
+								</tr>
+								<tr>
+									<td class="p-1">10-vstupová pernamentka</td>
+									<td class="p-1">25€</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-span-2 sm:col-span-1">
+						<h2 class="">Požičiavanie kníh</h2>
+						<p class="text-sm">0,50 € / kniha / mesiac</p>
+						<p class="text-sm">5 € ročná permanentka</p>
+					</div>
+				</div>
+				<br/>
+				<h1 class="text-xxl font-semibold">Podporte nás aj...</h1>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-4"/>
+				<div class="grid grid-cols-2 gap-10">
+					<div class="col-span-2 sm:col-span-1">
+						<h2 class="">
+							<a href="./podpora/2-percenta-z-dane">2% z daní</a>
+						</h2>
+					</div>
+					<div class="col-span-2 sm:col-span-1">
+						<h2 class="">
+							<a href="./podpora/dobrovolnictvo">Dobrovoľníctvom</a>
+						</h2>
+					</div>
+				</div>
+			}
+		}
 	}
 }
