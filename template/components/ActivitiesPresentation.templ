@@ -1,8 +1,8 @@
 package components
 
-script activitesImgClick() {
-    console.log(this);
-}
+import (
+	"jirku.sk/mcmamina/template/icon"
+)
 
 templ ActivitiesPresentation() {
 	<div class="activities-presentation w-full flex flex-col relative">
@@ -14,6 +14,7 @@ templ ActivitiesPresentation() {
 			for idx, activity := range getActivities() {
 				<button
  					class="image-wrapper h-44 outline-none flex-grow relative cursor-pointer overflow-hidden"
+ 					data-activity={ activity.id }
  					tabindex="-1"
 				>
 					<div
@@ -30,11 +31,59 @@ templ ActivitiesPresentation() {
 				</button>
 			}
 		</div>
-		<div class="w-full relative  text-white text-lg px-5 md:px-0 my-8 h-80 md:h-48 overflow-hidden"></div>
+		<div class="w-full relative text-white text-lg px-5 md:px-0 my-8 h-80 md:h-48 overflow-hidden">
+			for idx, activity := range getActivities() {
+				<div
+ 					class={ "activity-content w-full overflow-none transition-all duration-500 ease-in-out transform absolute",
+                    templ.KV("translate-x-0 opacity-1", idx == 0),
+                    templ.KV("translate-x-full opacity-0 mouse-events-none", idx != 0) }
+ 					data-activity={ activity.id }
+				>
+					<div class="w-full relative flex flex-wrap md:flex-nowrap flex-row gap-4">
+						<div class="w-full md:w-auto flex-grow flex-shrink">
+							<h1 class="text-2xl underline-offset-1 underline pb-5">
+								{ activity.title }
+							</h1>
+							<p>{ activity.description }</p>
+						</div>
+						<div class="w-full md:w-72 flex-grow-0 flex-shrink-0">
+							<h1 class="text-lg underline-offset-1 underline pb-2">Kontakt</h1>
+							if activity.contact.email != "" {
+								<div class="w-full">
+									<a href={ templ.URL("mailto:" + activity.contact.email) }>
+										@icon.Mail("fill-indigo-100 mr-2", "16")
+										{ activity.contact.email }
+									</a>
+								</div>
+							}
+							if activity.contact.phone != "" {
+								<div class="w-full">
+									<a href={ templ.URL("tel:" + activity.contact.phone) }>
+										@icon.Phone("fill-indigo-100 mr-2", "16")
+										{ activity.contact.phone }
+									</a>
+								</div>
+							}
+							if activity.contact.fb != "" {
+								<div class="w-full">
+									@icon.Facebook("fill-indigo-100 mr-2", "16")
+									<a href={ templ.URL(activity.contact.fb) }>Prihlasovanie na FB</a>
+								</div>
+							}
+							<h1 class="text-lg underline-offset-1 underline pb-2 pt-3">
+								Aktivity
+							</h1>
+							<div class="w-full">{ activity.time }</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
 	</div>
 }
 
 type activity struct {
+	id          string
 	title       string
 	img         string
 	description string
@@ -51,6 +100,7 @@ type activityContact struct {
 func getActivities() []activity {
 	return []activity{
 		{
+			id:          "dielnicky",
 			title:       "Montessori hernička",
 			img:         "bg-dielnicky",
 			contact:     activityContact{phone: "+421 948 523 493", fb: "https://www.facebook.com/MaterskeCentrumMamina/"},
@@ -58,6 +108,7 @@ func getActivities() []activity {
 			time:        "Každý piatok o 9:30.",
 		},
 		{
+			id:          "tinka",
 			title:       "Angličtina s Tinkou",
 			img:         "bg-tinka",
 			contact:     activityContact{phone: "+421 907 948 207", email: "anglictinamcmamina@gmail.com"},
@@ -65,6 +116,7 @@ func getActivities() []activity {
 			time:        "Utorok o 16:30 v 3 skupinách a štvrtok o 10:00.",
 		},
 		{
+			id:          "happy-gym",
 			title:       "Happy gym",
 			img:         "bg-hrave-cvicenie",
 			contact:     activityContact{phone: "+421 907 228 779", email: "happygymzv@gmail.com"},
@@ -72,6 +124,7 @@ func getActivities() []activity {
 			time:        "Utorok o 8:45 v troch skupinkách",
 		},
 		{
+			id:          "pohyb",
 			title:       "Tanečno - pohybová príprava",
 			img:         "bg-pohybova-priprava",
 			contact:     activityContact{email: "tkelement@tkelement.com"},

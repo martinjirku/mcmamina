@@ -24,7 +24,13 @@ export default defineConfig({
   build: {
     target: "modules",
     sourcemap: true,
-    minify: true,
+    minify: false,
+    terserOptions: {
+      format: {
+        comments: false,
+        beautify: false,
+      },
+    },
     cssCodeSplit: false,
     manifest: true,
     rollupOptions: {
