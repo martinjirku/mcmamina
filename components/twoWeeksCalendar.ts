@@ -61,14 +61,39 @@ document
         });
       }
     });
-    const showTooltip = getShowTooltip(tooltip);
-    const hideTooltip = getHideTooltip(tooltip);
-    [
-      ["mouseenter", showTooltip] as const,
-      ["mouseleave", hideTooltip] as const,
-      ["focus", showTooltip] as const,
-      ["blur", hideTooltip] as const,
-    ].forEach(([event, listener]) => {
-      el.addEventListener(event, listener);
+    let isHovering = false;
+    const showTooltip = () => {
+      tooltip.classList.remove("opacity-0");
+      tooltip.classList.remove("pointer-events-none");
+      tooltip.classList.add("opacity-100");
+    };
+    const hideTooltip = () => {
+      if (isHovering) return;
+      tooltip.classList.remove("opacity-100");
+      tooltip.classList.add("pointer-events-none");
+      tooltip.classList.add("opacity-0");
+    };
+    el.addEventListener("mouseenter", () => {
+      isHovering = true;
+      showTooltip();
+    });
+    el.addEventListener("mouseleave", () => {
+      isHovering = false;
+      setTimeout(hideTooltip, 30);
+    });
+    el.addEventListener("focus", () => {
+      isHovering = true;
+      showTooltip();
+    });
+    el.addEventListener("blur", () => {
+      isHovering = false;
+      setTimeout(hideTooltip, 30);
+    });
+    tooltip.addEventListener("mouseenter", () => {
+      isHovering = true;
+    });
+    tooltip.addEventListener("mouseleave", () => {
+      isHovering = false;
+      hideTooltip();
     });
   });

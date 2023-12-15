@@ -7,17 +7,13 @@ import (
 	"jirku.sk/mcmamina/models"
 )
 
-css IndexCss() {
-	background-image: url("/images/crayons-1445053_640.jpg");
-}
-
 type IndexPageDto struct {
 	Days  []models.Day
 	Today time.Time
 }
 
 templ IndexPage(dto IndexPageDto) {
-	@layout.Layout(templ.CSSClasses{"w-full bg-cover bg-center text-indigo-800 font-light", IndexCss()}) {
+	@layout.Layout(templ.CSSClasses{"index-page w-full bg-cover bg-center text-indigo-800 font-light"}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0 mt-12")) {
 			@components.CardContent("flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center") {
 				<div class="flex-grow md:max-w-xs flex justify-around items-center">
