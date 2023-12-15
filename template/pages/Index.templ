@@ -31,5 +31,10 @@ templ IndexPage(dto IndexPageDto) {
 				</div>
 			}
 		}
+		@components.FullWidthCard(components.NewFullWidthCard().Background("bg-indigo-950").Margin("mt-0").Padding("px-0 md:px-5")) {
+			@components.CardContent("flex columns-2 text-indigo-800") {
+				@components.ActivitiesPresentation()
+			}
+		}
 	}
 }

@@ -1,0 +1,82 @@
+package components
+
+script activitesImgClick() {
+    console.log(this);
+}
+
+templ ActivitiesPresentation() {
+	<div class="activities-presentation w-full flex flex-col relative">
+		<div
+ 			role="menu"
+ 			class="relative flex flex-row"
+ 			tabindex="0"
+		>
+			for idx, activity := range getActivities() {
+				<button
+ 					class="image-wrapper h-44 outline-none flex-grow relative cursor-pointer overflow-hidden"
+ 					tabindex="-1"
+				>
+					<div
+ 						class={
+							"image h-full bg-cover transform transition duration-500",
+							templ.KV(activity.img, true),
+							templ.KV("scale-125", idx == 0),
+							templ.KV("filter grayscale grayscale-100", idx != 0),
+						}
+					></div>
+					<div class="title px-2 text-ellipsis overflow-hidden break-all absolute flex items-center justify-center bottom-0 text-md text-indigo-100 align-middle h-24 sm:h-18 md:h-16 bg-slate-700 bg-opacity-90 w-full leading-6">
+						{ activity.title }
+					</div>
+				</button>
+			}
+		</div>
+		<div class="w-full relative  text-white text-lg px-5 md:px-0 my-8 h-80 md:h-48 overflow-hidden"></div>
+	</div>
+}
+
+type activity struct {
+	title       string
+	img         string
+	description string
+	time        string
+	contact     activityContact
+}
+
+type activityContact struct {
+	email string
+	phone string
+	fb    string
+}
+
+func getActivities() []activity {
+	return []activity{
+		{
+			title:       "Montessori hernička",
+			img:         "bg-dielnicky",
+			contact:     activityContact{phone: "+421 948 523 493", fb: "https://www.facebook.com/MaterskeCentrumMamina/"},
+			description: "Zážitkový a vzdelávací program pre najmenších od 2 do 4 rokov inšpirovaný princípmi Montessori pedagogiky.",
+			time:        "Každý piatok o 9:30.",
+		},
+		{
+			title:       "Angličtina s Tinkou",
+			img:         "bg-tinka",
+			contact:     activityContact{phone: "+421 907 948 207", email: "anglictinamcmamina@gmail.com"},
+			description: "Tinka vedie krúžok angličtiny hravou a prirodzenou cestou.",
+			time:        "Utorok o 16:30 v 3 skupinách a štvrtok o 10:00.",
+		},
+		{
+			title:       "Happy gym",
+			img:         "bg-hrave-cvicenie",
+			contact:     activityContact{phone: "+421 907 228 779", email: "happygymzv@gmail.com"},
+			description: "Cvičenie pre najmenších zamerané na psychomotorický, sociálny, citový a rozumový vývoj dieťaťa.",
+			time:        "Utorok o 8:45 v troch skupinkách",
+		},
+		{
+			title:       "Tanečno - pohybová príprava",
+			img:         "bg-pohybova-priprava",
+			contact:     activityContact{email: "tkelement@tkelement.com"},
+			description: "Cieľom u detí je získať hravou formou - správne držanie tela, hudobno-pohybové cítenie, zamerať sa na rytmus, tempo, takt, dynamiku, frázovanie a iné.",
+			time:        "Pondelok o 16:00 v dvoch skupinkách",
+		},
+	}
+}
