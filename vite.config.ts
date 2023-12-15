@@ -1,7 +1,20 @@
 import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
-  plugins: [splitVendorChunkPlugin()],
+  plugins: [
+    splitVendorChunkPlugin(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: "./assets/images/favicon.ico",
+          dest: "./",
+          overwrite: true,
+          dereference: true,
+        },
+      ],
+    }),
+  ],
   appType: "custom",
   resolve: {
     alias: {

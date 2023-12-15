@@ -16,6 +16,9 @@ dependencies:
     version: 0.0.2
 
 devDependencies:
+  '@types/node':
+    specifier: ^20.10.4
+    version: 20.10.4
   fast-glob:
     specifier: ^3.3.2
     version: 3.3.2
@@ -27,7 +30,10 @@ devDependencies:
     version: 5.3.3
   vite:
     specifier: ^5.0.7
-    version: 5.0.7
+    version: 5.0.7(@types/node@20.10.4)
+  vite-plugin-static-copy:
+    specifier: ^1.0.0
+    version: 1.0.0(vite@5.0.7)
 
 packages:
 
@@ -406,6 +412,12 @@ packages:
     dev: true
     optional: true
 
+  /@types/node@20.10.4:
+    resolution: {integrity: sha512-D08YG6rr8X90YB56tSIuBaddy/UXAA9RKJoFvrsnogAum/0pmjkgi4+2nx96A330FmioegBWmEYQ+syqCFaveg==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
   /any-promise@1.3.0:
     resolution: {integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==}
     dev: true
@@ -542,6 +554,15 @@ packages:
       to-regex-range: 5.0.1
     dev: true
 
+  /fs-extra@11.2.0:
+    resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.1
+    dev: true
+
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
@@ -581,6 +602,10 @@ packages:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
+    dev: true
+
+  /graceful-fs@4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
     dev: true
 
   /hasown@2.0.0:
@@ -639,6 +664,14 @@ packages:
   /jiti@1.21.0:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
+    dev: true
+
+  /jsonfile@6.1.0:
+    resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+    dependencies:
+      universalify: 2.0.1
+    optionalDependencies:
+      graceful-fs: 4.2.11
     dev: true
 
   /lilconfig@2.1.0:
@@ -950,11 +983,33 @@ packages:
     hasBin: true
     dev: true
 
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    dev: true
+
+  /universalify@2.0.1:
+    resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
+    engines: {node: '>= 10.0.0'}
+    dev: true
+
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
-  /vite@5.0.7:
+  /vite-plugin-static-copy@1.0.0(vite@5.0.7):
+    resolution: {integrity: sha512-kMlrB3WDtC5GzFedNIPkpjnOAr8M11PfWOiUaONrUZ3AqogTsOmIhTt6w7Fh311wl8pN81ld7sfuOEogFJ9N8A==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      vite: ^5.0.0
+    dependencies:
+      chokidar: 3.5.3
+      fast-glob: 3.3.2
+      fs-extra: 11.2.0
+      picocolors: 1.0.0
+      vite: 5.0.7(@types/node@20.10.4)
+    dev: true
+
+  /vite@5.0.7(@types/node@20.10.4):
     resolution: {integrity: sha512-B4T4rJCDPihrQo2B+h1MbeGL/k/GMAHzhQ8S0LjQ142s6/+l3hHTT095ORvsshj4QCkoWu3Xtmob5mazvakaOw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -982,6 +1037,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 20.10.4
       esbuild: 0.19.9
       postcss: 8.4.32
       rollup: 4.7.0
