@@ -18,19 +18,19 @@ type EventsGetter interface {
 type CSSPathGetter interface {
 	GetCssPath() (string, error)
 }
-type DefaultHandler struct {
+type IndexHandler struct {
 	Log           *slog.Logger
 	EventsGetter  EventsGetter
 	cssPathGetter CSSPathGetter
 }
 
-func NewdefaultHandler(log *slog.Logger, getter EventsGetter, cssPathGetter CSSPathGetter) http.Handler {
-	defaultHandler := DefaultHandler{
+func NewIndexHandler(log *slog.Logger, getter EventsGetter, cssPathGetter CSSPathGetter) http.Handler {
+	IndexHandler := IndexHandler{
 		Log:           log,
 		EventsGetter:  getter,
 		cssPathGetter: cssPathGetter,
 	}
-	return &defaultHandler
+	return &IndexHandler
 }
 
 type ViewProps struct {
@@ -38,7 +38,7 @@ type ViewProps struct {
 	today time.Time
 }
 
-func (h *DefaultHandler) View(w http.ResponseWriter, r *http.Request, props ViewProps) {
+func (h *IndexHandler) View(w http.ResponseWriter, r *http.Request, props ViewProps) {
 	cssPath, _ := h.cssPathGetter.GetCssPath()
 	components.Page(components.NewPage(
 		"Index",
@@ -51,7 +51,7 @@ func (h *DefaultHandler) View(w http.ResponseWriter, r *http.Request, props View
 	)).Render(r.Context(), w)
 }
 
-func (h *DefaultHandler) Get(w http.ResponseWriter, r *http.Request) {
+func (h *IndexHandler) Get(w http.ResponseWriter, r *http.Request) {
 	var err error
 	props := ViewProps{
 		days:  models.GetNumberOfDaysAfter(time.Now(), 15),
@@ -83,12 +83,28 @@ func (h *DefaultHandler) Get(w http.ResponseWriter, r *http.Request) {
 	h.View(w, r, props)
 }
 
-func (h *DefaultHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *IndexHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if r.Method == http.MethodPost {
+		// todo: handle POST
 		h.Get(w, r)
 		return
 	}
 	h.Get(w, r)
+}
+
+func AboutUs(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		cssPath, _ := cssPathGetter.GetCssPath()
+		// TODO: handle GET
+		components.Page(components.NewPage(
+			"AboutUs",
+			"Domov",
+			cssPath,
+			pages.AboutUsPage(),
+		)).Render(r.Context(), w)
+	}
 }

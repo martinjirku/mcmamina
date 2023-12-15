@@ -2,15 +2,15 @@ package layout
 
 import "jirku.sk/mcmamina/template/icon"
 
-templ Layout(class templ.CSSClasses) {
+templ Layout(class templ.CSSClasses, isActive func(link string) bool) {
 	<div class="h-screen flex flex-col">
 		<header class="w-full z-50 bg-indigo-400 sticky shadow-lg top-0 text-cyan-50 text-xl">
 			<nav class="hidden md:flex justify-around py-6" aria-label="Hlavné">
 				<ul class="flex gap-6">
-					@MenuItem("/", "Domov", true)
-					@MenuItem("/o-nas", "O nás", false)
-					@MenuItem("/aktivity", "Aktivity", false)
-					@MenuItem("/podpora", "Podporili nás", false)
+					@MenuItem("/", "Domov", isActive("/"))
+					@MenuItem("/o-nas", "O nás", isActive("/o-nas"))
+					@MenuItem("/aktivity", "Aktivity", isActive("/aktivity"))
+					@MenuItem("/podpora", "Podporili nás", isActive("/podpora"))
 				</ul>
 			</nav>
 			<nav class="w-full md:hidden left-0 flex-col" aria-label="Hlavné">
@@ -24,10 +24,10 @@ templ Layout(class templ.CSSClasses) {
  					class={ "flex z-10 flex-col gap-6 absolute top-20 bg-indigo-400 w-full text-cyan-50 transition-transform ease-in-out duration-500 transform",
 					templ.KV("h-auto translate-y-0 opacity-100", true), "h-0 overflow-hidden -translate-y-full opacity-0" }
 				>
-					@MenuItem("/", "Domov", true)
-					@MenuItem("/o-nas", "O nás", false)
-					@MenuItem("/aktivity", "Aktivity", false)
-					@MenuItem("/podpora", "Podporili nás", false)
+					@MenuItem("/", "Domov", isActive("/"))
+					@MenuItem("/o-nas", "O nás", isActive("/o-nas"))
+					@MenuItem("/aktivity", "Aktivity", isActive("/aktivity"))
+					@MenuItem("/podpora", "Podporili nás", isActive("/podpora"))
 				</ul>
 			</nav>
 		</header>

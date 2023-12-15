@@ -13,7 +13,7 @@ type IndexPageDto struct {
 }
 
 templ IndexPage(dto IndexPageDto) {
-	@layout.Layout(templ.CSSClasses{"index-page w-full bg-cover bg-center text-indigo-800 font-light"}) {
+	@layout.Layout(templ.CSSClasses{"index-page w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/"}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0 mt-12")) {
 			@components.CardContent("flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center") {
 				<div class="flex-grow md:max-w-xs flex justify-around items-center">

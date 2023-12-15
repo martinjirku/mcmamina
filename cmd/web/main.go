@@ -34,7 +34,8 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	distPath := "/dist"
 	cssService := services.NewCSS(distPath)
 
-	router.HandleFunc("/", handlers.NewdefaultHandler(log, calendarService, cssService).ServeHTTP)
+	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
+	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
 
 	handleFiles(router, "/images/", "./assets/images")
 	handleFiles(router, "/", "."+distPath)

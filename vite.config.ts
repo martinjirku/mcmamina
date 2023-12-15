@@ -34,7 +34,7 @@ export default defineConfig({
     cssCodeSplit: false,
     manifest: true,
     rollupOptions: {
-      input: ["template/pages/Index.ts"],
+      input: ["template/pages/Index.ts", "template/pages/AboutUs.ts"],
       output: {
         dir: "dist",
         format: "es",
