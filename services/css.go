@@ -44,5 +44,5 @@ func (c *CSS) GetCssPath() (string, error) {
 		return "", fmt.Errorf("get the path for style.css")
 	}
 
-	return path.Join(c.dist, style.File), nil
+	return path.Join(style.File), nil
 }

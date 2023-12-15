@@ -6,16 +6,15 @@ templ Page(props pageDto) {
 			<meta charSet="utf-8"/>
 			<meta name="viewport" content="width=device-width,initial-scale=1"/>
 			<title>{ props.title }</title>
-			<link rel="stylesheet" href="/dist/main.css"/>
+			<link rel="stylesheet" href="/main.css"/>
 			if props.Css != "" {
 				<link rel="stylesheet" href={ props.Css }/>
 			}
-			<link rel="stylesheet" href="/pages.css"/>
 			<link rel="icon" href="/images/favicon.ico"/>
 		</head>
 		<body class="h-full">
 			@props.Content
-			<script type="module" src={ "/dist/" + props.ID + ".es" }></script>
+			<script type="module" src={ "/" + props.ID + ".es" }></script>
 		</body>
 	</html>
 }

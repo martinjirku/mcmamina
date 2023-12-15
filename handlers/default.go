@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"jirku.sk/mcmamina/components"
-	"jirku.sk/mcmamina/components/pages"
 	"jirku.sk/mcmamina/models"
+	"jirku.sk/mcmamina/template/components"
+	"jirku.sk/mcmamina/template/pages"
 )
 
 type EventsGetter interface {

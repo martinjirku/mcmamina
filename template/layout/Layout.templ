@@ -1,6 +1,6 @@
 package layout
 
-import "jirku.sk/mcmamina/components/icon"
+import "jirku.sk/mcmamina/template/icon"
 
 templ Layout(class templ.CSSClasses) {
 	<div class="h-screen flex flex-col">
@@ -32,12 +32,11 @@ templ Layout(class templ.CSSClasses) {
 			</nav>
 		</header>
 		<main class={ class.String(), "flex-grow" }>
-			{ children...}
+			{ children... }
 		</main>
 		@Footer()
 	</div>
 }
-
 
 templ MenuItem(href string, content string, isActive bool) {
 	<li class="inline-block align-middle relative">
@@ -81,182 +80,187 @@ templ AnimatedHamburger() {
 
 templ OpeningHours() {
 	<h1 class="font-bold leading-10 underline underline-offset-4">
-	  Otváracie hodiny
+		Otváracie hodiny
 	</h1>
 	<table class="text-indigo-100">
-	  <thead>
-		<tr class="hidden">
-		  <th>Dni</th>
-		  <th>Čas</th>
-		</tr>
-	  </thead>
-	  <tbody>
-		<tr>
-		  <td class="w-36 sm:w-32 md:w-36 lg:w-40">Pondelok</td>
-		  <td>
-			<time datetime="09:00-2" aria-label="09:00">
-			  9:00
-			</time>{" "}
-			-{" "}
-			<time datetime="12:30-2" aria-label="12:30">
-			  12:30
-			</time>{" "}
-			|{" "}
-			<time datetime="16:00-2" aria-label="16:00">
-			  16:00
-			</time>{" "}
-			-{" "}
-			<time datetime="19:00-2" aria-label="19:00">
-			  19:00
-			</time>
-		  </td>
-		</tr>
-		<tr>
-		  <td>Utorok</td>
-		  <td>
-			<time datetime="09:00-2" aria-label="09:00">
-			  9:00
-			</time>{" "}
-			-{" "}
-			<time datetime="12:30-2" aria-label="12:30">
-			  12:30
-			</time>{" "}
-			|{" "}
-			<time datetime="16:00-2" aria-label="16:00">
-			  16:00
-			</time>{" "}
-			-{" "}
-			<time datetime="19:00-2" aria-label="19:00">
-			  19:00
-			</time>
-		  </td>
-		</tr>
-		<tr>
-		  <td>Streda</td>
-		  <td>
-			<time datetime="09:00-2" aria-label="09:00">
-			  9:00
-			</time>{" "}
-			-{" "}
-			<time datetime="12:30-2" aria-label="12:30">
-			  12:30
-			</time>{" "}
-			|{" "}
-			<time datetime="16:00-2" aria-label="16:00">
-			  16:00
-			</time>{" "}
-			-{" "}
-			<time datetime="19:00-2" aria-label="19:00">
-			  19:00
-			</time>
-		  </td>
-		</tr>
-		<tr>
-		  <td>Štvrtok</td>
-		  <td>
-			<time datetime="09:00-2" aria-label="09:00">
-			  9:00
-			</time>{" "}
-			-{" "}
-			<time datetime="12:30-2" aria-label="12:30">
-			  12:30
-			</time>{" "}
-			|{" "}
-			<time datetime="16:00-2" aria-label="16:00">
-			  16:00
-			</time>{" "}
-			-{" "}
-			<time datetime="19:00-2" aria-label="19:00">
-			  19:00
-			</time>
-		  </td>
-		</tr>
-		<tr>
-		  <td>Piatok</td>
-		  <td>
-			<time datetime="09:00-2" aria-label="09:00">
-			  9:00
-			</time>{" "}
-			-{" "}
-			<time datetime="12:30-2" aria-label="12:30">
-			  12:30
-			</time>
-		  </td>
-		</tr>
-	  </tbody>
+		<thead>
+			<tr class="hidden">
+				<th>Dni</th>
+				<th>Čas</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="w-36 sm:w-32 md:w-36 lg:w-40">Pondelok</td>
+				<td>
+					<time datetime="09:00-2" aria-label="09:00">
+						9:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="12:30-2" aria-label="12:30">
+						12:30
+					</time>{ " " }
+					|{ " " }
+					<time datetime="16:00-2" aria-label="16:00">
+						16:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="19:00-2" aria-label="19:00">
+						19:00
+					</time>
+				</td>
+			</tr>
+			<tr>
+				<td>Utorok</td>
+				<td>
+					<time datetime="09:00-2" aria-label="09:00">
+						9:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="12:30-2" aria-label="12:30">
+						12:30
+					</time>{ " " }
+					|{ " " }
+					<time datetime="16:00-2" aria-label="16:00">
+						16:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="19:00-2" aria-label="19:00">
+						19:00
+					</time>
+				</td>
+			</tr>
+			<tr>
+				<td>Streda</td>
+				<td>
+					<time datetime="09:00-2" aria-label="09:00">
+						9:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="12:30-2" aria-label="12:30">
+						12:30
+					</time>{ " " }
+					|{ " " }
+					<time datetime="16:00-2" aria-label="16:00">
+						16:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="19:00-2" aria-label="19:00">
+						19:00
+					</time>
+				</td>
+			</tr>
+			<tr>
+				<td>Štvrtok</td>
+				<td>
+					<time datetime="09:00-2" aria-label="09:00">
+						9:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="12:30-2" aria-label="12:30">
+						12:30
+					</time>{ " " }
+					|{ " " }
+					<time datetime="16:00-2" aria-label="16:00">
+						16:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="19:00-2" aria-label="19:00">
+						19:00
+					</time>
+				</td>
+			</tr>
+			<tr>
+				<td>Piatok</td>
+				<td>
+					<time datetime="09:00-2" aria-label="09:00">
+						9:00
+					</time>{ " " }
+					-{ " " }
+					<time datetime="12:30-2" aria-label="12:30">
+						12:30
+					</time>
+				</td>
+			</tr>
+		</tbody>
 	</table>
 }
 
 templ Contacts() {
 	<h1 class="font-bold leading-10 underline underline-offset-4 inline-block mt-5">
-	  Kontakty
+		Kontakty
 	</h1>
-	<br />
+	<br/>
 	<table class="text-indigo-100">
-	  <tbody>
-		<tr>
-			<td class="w-36 sm:w-32 md:w-36 lg:w-40 align-text-top" rowspan="2">
-				Oslavy
-			</td>
-			<td>
-				<a href="mailto:oslavy@mcmamina.sk">
-					@icon.Mail("fill-indigo-100 mr-2", "16") oslavy@mcmamina.sk
-				</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href="tel:+421904102740">
-					@icon.Phone("fill-indigo-100 mr-2", "16") +421904 102 740
-				</a>
-		  	</td>
-		</tr>
-		<tr>
-		  <td rowspan="1">Akcie</td>
-		  <td>
-			<a href="mailto:akcie@mcmamina.sk">
-				@icon.Mail("fill-indigo-100 mr-2", "16") akcie@mcmamina.sk
-			</a>
-		  </td>
-		</tr>
-		<tr>
-			<td>Predpôrodné kurzy</td>
-			<td>
-				<a href="tel:+421950492901">
-					@icon.Phone("fill-indigo-100 mr-2", "16") +421950 492 901
-				</a>
-		  </td>
-		</tr>
-		<tr>
-			<td rowspan="1">Burza</td>
-			<td>
-				<a href="mailto:burza@mcmamina.sk">
-					@icon.Mail("fill-indigo-100 mr-2", "16") burza@mcmamina.sk
-				</a>
-			</td>
-		</tr>
-	  </tbody>
+		<tbody>
+			<tr>
+				<td class="w-36 sm:w-32 md:w-36 lg:w-40 align-text-top" rowspan="2">
+					Oslavy
+				</td>
+				<td>
+					<a href="mailto:oslavy@mcmamina.sk">
+						@icon.Mail("fill-indigo-100 mr-2", "16")
+						oslavy@mcmamina.sk
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href="tel:+421904102740">
+						@icon.Phone("fill-indigo-100 mr-2", "16")
+						+421904 102 740
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="1">Akcie</td>
+				<td>
+					<a href="mailto:akcie@mcmamina.sk">
+						@icon.Mail("fill-indigo-100 mr-2", "16")
+						akcie@mcmamina.sk
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>Predpôrodné kurzy</td>
+				<td>
+					<a href="tel:+421950492901">
+						@icon.Phone("fill-indigo-100 mr-2", "16")
+						+421950 492 901
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="1">Burza</td>
+				<td>
+					<a href="mailto:burza@mcmamina.sk">
+						@icon.Mail("fill-indigo-100 mr-2", "16")
+						burza@mcmamina.sk
+					</a>
+				</td>
+			</tr>
+		</tbody>
 	</table>
 }
 
 templ Socials() {
 	<a
-		href="https://www.facebook.com/MaterskeCentrumMamina/"
-		aria-label="Facebook stránka Materského centra MAMINA"
-		target="_blank"
-		class="p-2"
-		rel="noreferrer"
-		title="Facebook stránka Materského centra MAMINA"
+ 		href="https://www.facebook.com/MaterskeCentrumMamina/"
+ 		aria-label="Facebook stránka Materského centra MAMINA"
+ 		target="_blank"
+ 		class="p-2"
+ 		rel="noreferrer"
+ 		title="Facebook stránka Materského centra MAMINA"
 	>
 		@icon.Facebook("fill-indigo-100 hover:animate-pulse", "42")
 	</a>
 	<a
-		href="https://www.instagram.com/mc.mamina/"
-		aria-label="Instagram stránka Materského centra MAMINA"
-		target="_blank"
-		rel="noreferrer"
-		class="p-2"
-		title="Instagram stránka Materského centra MAMINA"
+ 		href="https://www.instagram.com/mc.mamina/"
+ 		aria-label="Instagram stránka Materského centra MAMINA"
+ 		target="_blank"
+ 		rel="noreferrer"
+ 		class="p-2"
+ 		title="Instagram stránka Materského centra MAMINA"
 	>
 		@icon.Instagram("fill-indigo-100 hover:animate-pulse", "42")
 	</a>
@@ -268,7 +272,7 @@ templ Footer() {
 			<address class="flex-grow not-italic font-thin text-sm">
 				<h2 class="font-bold leading-10 underline underline-offset-4">
 					Materské centrum MAMINA o.z.
-				</h2> 
+				</h2>
 				<h1 class="font-bold leading-10 underline underline-offset-4">
 					Fakturačné údaje
 				</h1>
@@ -276,36 +280,37 @@ templ Footer() {
 					@icon.Home("fill-indigo-100 mr-2", "16")
 					Tatranská 10, 97411 Banská Bystrica
 				</span>
-				<br />
+				<br/>
 				<span>IČO: 37956825</span>
-				<br />
+				<br/>
 				<span>DIČ: 2022358239</span>
-				<br />
-				<span> 
-					@icon.Bank("fill-indigo-100 mr-2", "16") SK62 8330
+				<br/>
+				<span>
+					@icon.Bank("fill-indigo-100 mr-2", "16")
+					SK62 8330
 					0000 0023 0190 0933
 				</span>
-				<br />
+				<br/>
 				<h1 class="inline-block mt-3 font-bold leading-10 underline underline-offset-4">
 					Štatutárka
 				</h1>
-				<br /> 
+				<br/>
 				<span>Martina Cabanová</span>
-				<br />
+				<br/>
 				<span>
 					<a href="tel:+421904102740">
 						@icon.Phone("fill-indigo-100 mr-2", "16")
 						+421948 523 493 - štatutárka
 					</a>
 				</span>
-				<br />
+				<br/>
 				<span>
 					<a href="mailto:mcmamina@mcmamina.sk">
 						@icon.Mail("fill-indigo-100 mr-2", "16")
 						mcmamina@mcmamina.sk
 					</a>
 				</span>
-				<br />
+				<br/>
 				<span>
 					<a href="mailto:info@mcmamina.sk">
 						@icon.Mail("fill-indigo-100 mr-2", "16")
@@ -323,11 +328,11 @@ templ Footer() {
 				</div>
 				<div class="w-full flex-grow flex items-center justify-center mt-10 lg:mt-0">
 					<a
-						href="https://linkedin.com/in/martin-j-65786267"
-						target="_blank"
-						rel="noreferrer"
-						class="px-5 py-3 bg-slate-800 rounded-md  hover:animate-spin hover:cursor-pointer"
-						style="animation-iteration-count:1"
+ 						href="https://linkedin.com/in/martin-j-65786267"
+ 						target="_blank"
+ 						rel="noreferrer"
+ 						class="px-5 py-3 bg-slate-800 rounded-md  hover:animate-spin hover:cursor-pointer"
+ 						style="animation-iteration-count:1"
 					>
 						// <Signature class="fill-indigo-100 mr-2" dimension={16} />{" "}
 						Vytvoril MJ

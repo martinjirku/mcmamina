@@ -14,10 +14,14 @@
         "esModuleInterop": true,
         "isolatedModules": true,
         "sourceMap": true,
-        "types": []
+        "types": [],
+        "paths": {
+            "@assets/*": ["./assets/*"]
+        }
+
     },
     "include": [
-        "components/**/*.ts",
+        "template/**/*.ts",
         "node_modules/**/*.ts"
     ]
 }

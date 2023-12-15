@@ -5,10 +5,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/a-h/templ"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"jirku.sk/mcmamina/components/pages"
 	"jirku.sk/mcmamina/handlers"
 	"jirku.sk/mcmamina/services"
 )
@@ -36,17 +34,12 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	distPath := "/dist"
 	cssService := services.NewCSS(distPath)
 
-	handleFiles(router, "/images/", "./assets/images")
-	handleFiles(router, distPath+"/", "."+distPath)
-
 	router.HandleFunc("/", handlers.NewdefaultHandler(log, calendarService, cssService).ServeHTTP)
-	router.HandleFunc("/pages.css", CssHandler())
-	http.ListenAndServe("localhost:3000", router)
-}
 
-func CssHandler() func(http.ResponseWriter, *http.Request) {
-	handler := templ.NewCSSHandler(pages.IndexCss())
-	return handler.ServeHTTP
+	handleFiles(router, "/images/", "./assets/images")
+	handleFiles(router, "/", "."+distPath)
+
+	http.ListenAndServe("localhost:3000", router)
 }
 
 func handleFiles(r *mux.Router, path, dir string) {
