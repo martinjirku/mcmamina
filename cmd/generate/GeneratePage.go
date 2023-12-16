@@ -37,8 +37,8 @@ func GeneratePage(c *cli.Context) error {
 		if err != nil {
 			return err
 		}
-		params.Name = text.ToCamelCase(params.Name)
 	}
+	params.Name = text.ToCamelCase(params.Name)
 
 	params.Path = c.String("path")
 	if params.Path == "" {

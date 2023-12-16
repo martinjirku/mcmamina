@@ -5,12 +5,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/joho/godotenv"
 	"jirku.sk/mcmamina/services"
 )
 
 func TestCalendar(t *testing.T) {
-	calendarService := services.NewCalendarService("AIzaSyAkRcuTDqhS6FYZvOASB8gXNWhQ_grK3lg", "n4bgt6kl18u5ueku1g38f5kic8@group.calendar.google.com")
-	// calendarService := services.NewCalendarService("AIzaSyAkRcuTDqhS6FYZvOASB8gXNWhQ_grK3lg", "450bfae1def53fcc04f16ae1a9787c3901090ea5b3e87aaab4643e50745bb91d@group.calendar.google.com")
+	var env map[string]string
+	env, err := godotenv.Read("../.env")
+	if err != nil {
+		t.Errorf("Error loading .env file %v", err)
+	}
+	calendarService := services.NewCalendarService(env["GOOGLE_API_KEY"], env["GOOGLE_CALENDAR_ID"])
 	events, err := calendarService.GetEvents(context.Background(), time.Now(), time.Now().AddDate(0, 0, 5))
 	if err != nil {
 		t.Errorf("Failed to get events: %v", err)
