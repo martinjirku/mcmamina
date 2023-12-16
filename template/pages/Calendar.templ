@@ -1,0 +1,22 @@
+
+package pages
+
+import (
+	"jirku.sk/mcmamina/template/layout"
+	"jirku.sk/mcmamina/template/components"
+)
+
+templ CalendarPage() {
+	@layout.Layout(templ.CSSClasses{"calendar w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/kalendar"}) {
+		@components.FullWidthCard(*components.NewFullWidthCard()) {
+			@components.CardContent("leading-normal") {
+				<iframe
+ 					title="Kalendár"
+ 					class="w-full"
+ 					height="600"
+ 					src="https://calendar.google.com/calendar/embed?src=n4bgt6kl18u5ueku1g38f5kic8%40group.calendar.google.com&ctz=Europe%2FPrague"
+				></iframe>
+			}
+		}
+	}
+}

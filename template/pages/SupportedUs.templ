@@ -1,0 +1,15 @@
+
+package pages
+
+import (
+	"jirku.sk/mcmamina/template/layout"
+	"jirku.sk/mcmamina/template/components"
+)
+
+templ SupportedUsPage() {
+	@layout.Layout(templ.CSSClasses{"supported-us w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/podpora"}) {
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0").Background("bg-indigo-950").Padding("px-0 md:px-5")) {
+			<div>SupportedUs Page</div>
+		}
+	}
+}

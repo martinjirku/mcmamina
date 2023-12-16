@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -93,6 +94,9 @@ func GeneratePage(c *cli.Context) error {
 	if err = generatePageHandler(c, params); err != nil {
 		return err
 	}
+
+	injectCode("vite.config.ts", "        // -> MCMAMINA - GENERATE PAGE", fmt.Sprintf("        \"%s\"", params.PageTsPath()))
+	injectCode("./cmd/web/main.go", "	// MCMAMINA -->> GENERATED CODE", fmt.Sprintf("	router.HandleFunc(\"%s\", handlers.%s(log, cssService))", params.Path, params.Name))
 
 	return nil
 }
@@ -199,6 +203,30 @@ func printBox(text string) {
 	fmt.Println(top)
 	fmt.Println(middle)
 	fmt.Println(bottom)
+}
+
+func injectCode(filePath, marker, newCode string) error {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	lines := []string{}
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		lines = append(lines, line)
+		if strings.Contains(line, marker) {
+			lines = append(lines, newCode)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0644)
 }
 
 func writeToFile(path string, buffer bytes.Buffer) error {

@@ -6,18 +6,18 @@ import (
 )
 
 func ToCamelCase(input string) string {
-	isToUpper := false
-	return strings.Map(func(r rune) rune {
-		if r == '_' || r == '-' || r == ' ' {
-			isToUpper = true
-			return -1 // Skip this character
+	splitFunc := func(c rune) bool {
+		return c == '_' || c == '-' || c == ' '
+	}
+
+	parts := strings.FieldsFunc(input, splitFunc)
+	for i, part := range parts {
+		if i != 0 || unicode.IsUpper(rune(part[0])) {
+			parts[i] = strings.ToUpper(part[:1]) + part[1:]
 		}
-		if isToUpper {
-			isToUpper = false
-			return unicode.ToUpper(r)
-		}
-		return unicode.ToLower(r)
-	}, input)
+	}
+	return strings.Join(parts, "")
+
 }
 
 func CamelToDashDelimited(input string) string {

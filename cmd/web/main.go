@@ -36,6 +36,11 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
+	// MCMAMINA -->> GENERATED CODE
+	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService))
+	router.HandleFunc("/kalendar", handlers.Calendar(log, cssService))
+
+	// MCMAMINA <<-- GENERATED CODE
 
 	handleFiles(router, "/images/", "./assets/images")
 	handleFiles(router, "/", "."+distPath)

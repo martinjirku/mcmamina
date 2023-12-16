@@ -34,7 +34,13 @@ export default defineConfig({
     cssCodeSplit: false,
     manifest: true,
     rollupOptions: {
-      input: ["template/pages/Index.ts", "template/pages/AboutUs.ts"],
+      input: [
+        "template/pages/Index.ts",
+        "template/pages/AboutUs.ts",
+        "template/pages/SupportedUs.ts",
+        "template/pages/Calendar.ts",
+        // -> MCMAMINA - GENERATE PAGE
+      ],
       output: {
         dir: "dist",
         format: "es",

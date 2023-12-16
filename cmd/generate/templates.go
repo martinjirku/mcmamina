@@ -10,8 +10,10 @@ import (
 
 templ {{.Name}}Page() {
 	@layout.Layout(templ.CSSClasses{"{{.ClassName }} w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "{{.Path}}"}) {
-		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0").Background("bg-indigo-950").Padding("px-0 md:px-5")) {
-			<div>{{.Name}} Page</div>
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0")) {
+			@components.CardContent("") {
+				<div>{{.Title}} Page</div>
+			}
 		}
 	}
 }
