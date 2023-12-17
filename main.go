@@ -1,8 +1,13 @@
 package main
 
 import (
+	"embed"
+	"flag"
+	"fmt"
+	"io/fs"
 	"log/slog"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/gorilla/mux"
@@ -17,6 +22,9 @@ const (
 	GOOGLE_CALENDAR_ID = "GOOGLE_CALENDAR_ID"
 )
 
+//go:embed dist dist/.vite
+var distFS embed.FS
+
 func main() {
 	log := slog.Default()
 	var env map[string]string
@@ -26,35 +34,48 @@ func main() {
 	}
 	calendarService := services.NewCalendarService(env[GOOGLE_API_KEY], env[GOOGLE_CALENDAR_ID])
 	setupWebserver(log, calendarService)
-
 }
 
 func setupWebserver(log *slog.Logger, calendarService *services.CalendarService) {
 	router := mux.NewRouter()
-	distPath := "/dist"
-	cssService := services.NewCSS(distPath)
+	var publicPath string
+	flag.StringVar(&publicPath, "public", "", "Usage description of the flag")
+	flag.Parse()
+
+	var workingFolder fs.FS
+	log.Info("reading public folder")
+	if publicPath == "" {
+		log.Info("No public folder found, using embed FS")
+		log.Info("accessing embed FS")
+		folder, err := fs.Sub(distFS, "dist")
+		if err != nil {
+			log.Error("accessing sub 'dist' to embed FS %w", err)
+		}
+		workingFolder = folder
+	} else {
+		log.Info(fmt.Sprintf("serving specified location %s", publicPath))
+		workingFolder = os.DirFS(publicPath)
+	}
+
+	cssService := services.NewCSS(workingFolder, log)
 	sponsorService := services.NewSponsorService()
 
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
 	// MCMAMINA -->> GENERATED CODE
 	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService))
-
 	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService))
 	router.HandleFunc("/kalendar", handlers.Calendar(log, cssService))
-
 	// MCMAMINA <<-- GENERATED CODE
 
-	handleFiles(router, "/images/", "./assets/images")
-	handleFiles(router, "/", "."+distPath)
-
+	handleFiles(router, http.FS(workingFolder))
 	http.ListenAndServe("localhost:3000", router)
 }
 
-func handleFiles(r *mux.Router, path, dir string) {
-	fs := http.StripPrefix(path, http.FileServer(http.Dir(dir)))
+func handleFiles(r *mux.Router, folder http.FileSystem) {
+	fs := http.FileServer(folder)
 
-	r.PathPrefix(path).Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	r.PathPrefix("/").Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		filePath := filepath.Join("your_directory_path", r.URL.Path)
 		contentType := getContentType(filePath)
 		w.Header().Set("Content-Type", contentType)

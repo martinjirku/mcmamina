@@ -20,7 +20,7 @@ tasks:
       - npx vite build -w
   serverwatch:
     cmds:
-      - air --build.cmd "go build -o ./tmp/main ./cmd/web/main.go"
+      - air --build.cmd "go build -o ./tmp/main ./main.go --public ./dist"
 
   buildserver:
     cmds:

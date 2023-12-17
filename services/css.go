@@ -3,7 +3,8 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+	"io/fs"
+	"log/slog"
 	"path"
 )
 
@@ -17,25 +18,29 @@ type File struct {
 type Manifest = map[string]File
 
 type CSS struct {
-	dist string
+	log *slog.Logger
+	fs  fs.FS
 }
 
-func NewCSS(dist string) *CSS {
-	return &CSS{dist: dist}
+func NewCSS(fs fs.FS, log *slog.Logger) *CSS {
+	return &CSS{fs: fs, log: log}
 }
 
 func (c *CSS) GetCssPath() (string, error) {
-	file, err := os.Open(path.Join(".", c.dist, ".vite", "manifest.json"))
+	manifestPath := path.Join("./", ".vite", "manifest.json")
+	c.log.Info(fmt.Sprintf("reading manifest.json: %s", manifestPath))
+	file, err := c.fs.Open(manifestPath)
 	if err != nil {
 		return "", err
 	}
 	defer file.Close()
 	var manifest Manifest
+	c.log.Info(fmt.Sprintf("decoding manifest.json: %s", manifestPath))
 	err = json.NewDecoder(file).Decode(&manifest)
 	if err != nil {
 		return "", fmt.Errorf("decode manifest.json: %w", err)
 	}
-
+	c.log.Info(fmt.Sprintf("accessing from manifest.json: %s", manifestPath))
 	style, ok := manifest["style.css"]
 	if !ok {
 		return "", fmt.Errorf("get style.css from manifest: %w", err)

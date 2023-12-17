@@ -12,6 +12,12 @@ export default defineConfig({
           overwrite: true,
           dereference: true,
         },
+        {
+          src: "./assets/images/sponzori",
+          dest: "./images",
+          overwrite: true,
+          dereference: true,
+        },
       ],
     }),
   ],
@@ -40,8 +46,7 @@ export default defineConfig({
         "template/pages/SupportedUs.ts",
         "template/pages/Calendar.ts",
         // -> MCMAMINA - GENERATE PAGE
-        "template/pages/TaxBonus.ts"
-
+        "template/pages/TaxBonus.ts",
       ],
       output: {
         dir: "dist",
