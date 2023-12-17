@@ -33,11 +33,12 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	router := mux.NewRouter()
 	distPath := "/dist"
 	cssService := services.NewCSS(distPath)
+	sponsorService := services.NewSponsorService()
 
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
 	// MCMAMINA -->> GENERATED CODE
-	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService))
+	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService))
 	router.HandleFunc("/kalendar", handlers.Calendar(log, cssService))
 
 	// MCMAMINA <<-- GENERATED CODE
