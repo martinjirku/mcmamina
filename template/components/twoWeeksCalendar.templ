@@ -7,11 +7,14 @@ import (
 
 templ TwoWeeksCalendar(days []models.Day, today time.Time) {
 	<div class="sm:w-full scroll-m-0 text-right two-weeks-calendar">
-		<div class="w-full grid grid-cols-5 gap-2 text-indigo-500">
+		<div class="w-full grid grid-cols-5 gap-2 text-indigo-500 mb-3">
 			for _, item := range days {
 				@Day(item, today)
 			}
 		</div>
+		<a class="underline underline-offset-4 text-sm" href="/kalendar">
+			celý kalendár...
+		</a>
 	</div>
 }
 
