@@ -1,0 +1,29 @@
+# fly.toml app configuration file generated for mcmamina3 on 2023-12-17T22:00:07+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "mcmamina-go"
+# primary_region = "waw"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+
+[[services.http_checks]]
+  interval = "10s"
+  grace_period = "5s"
+  method = "get"
+  path = "/healthcheck"
+  protocol = "http"
+  timeout = "2s"
+  tls_skip_verify = false

@@ -27,12 +27,11 @@ var distFS embed.FS
 
 func main() {
 	log := slog.Default()
-	var env map[string]string
-	env, err := godotenv.Read()
+	err := godotenv.Load()
 	if err != nil {
 		log.Error("Error loading .env file", slog.Any("error", err))
 	}
-	calendarService := services.NewCalendarService(env[GOOGLE_API_KEY], env[GOOGLE_CALENDAR_ID])
+	calendarService := services.NewCalendarService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CALENDAR_ID))
 	setupWebserver(log, calendarService)
 }
 
@@ -59,7 +58,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 
 	cssService := services.NewCSS(workingFolder, log)
 	sponsorService := services.NewSponsorService()
-	router.HandleFunc("/healtcheck", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
@@ -73,7 +72,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	// MCMAMINA <<-- GENERATED CODE
 
 	handleFiles(router, http.FS(workingFolder))
-	http.ListenAndServe("0.0.0.0:3000", router)
+	http.ListenAndServe("0.0.0.0:8080", router)
 }
 
 func handleFiles(r *mux.Router, folder http.FileSystem) {

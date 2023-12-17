@@ -24,6 +24,6 @@ FROM scratch
 COPY --from=be-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=be-builder /app/mcmamina /mcmamina
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["/mcmamina"]
