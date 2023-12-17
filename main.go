@@ -59,6 +59,10 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 
 	cssService := services.NewCSS(workingFolder, log)
 	sponsorService := services.NewSponsorService()
+	router.HandleFunc("/healtcheck", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
 
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
@@ -69,7 +73,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	// MCMAMINA <<-- GENERATED CODE
 
 	handleFiles(router, http.FS(workingFolder))
-	http.ListenAndServe("localhost:3000", router)
+	http.ListenAndServe("0.0.0.0:3000", router)
 }
 
 func handleFiles(r *mux.Router, folder http.FileSystem) {

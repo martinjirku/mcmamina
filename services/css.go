@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"log/slog"
 	"path"
+	"sync"
 )
 
 type File struct {
@@ -18,15 +19,28 @@ type File struct {
 type Manifest = map[string]File
 
 type CSS struct {
-	log *slog.Logger
-	fs  fs.FS
+	log     *slog.Logger
+	fs      fs.FS
+	cssPath string
+	mu      sync.Mutex
 }
 
 func NewCSS(fs fs.FS, log *slog.Logger) *CSS {
 	return &CSS{fs: fs, log: log}
 }
 
-func (c *CSS) GetCssPath() (string, error) {
+func (c *CSS) LoadCss() error {
+	cssPath, err := c.getCssPath()
+	if err != nil {
+		return err
+	}
+	c.mu.Lock()
+	c.cssPath = cssPath
+	c.mu.Unlock()
+	return nil
+}
+
+func (c *CSS) getCssPath() (string, error) {
 	manifestPath := path.Join("./", ".vite", "manifest.json")
 	c.log.Info(fmt.Sprintf("reading manifest.json: %s", manifestPath))
 	file, err := c.fs.Open(manifestPath)
@@ -50,4 +64,15 @@ func (c *CSS) GetCssPath() (string, error) {
 	}
 
 	return path.Join("/", style.File), nil
+}
+
+func (c *CSS) GetCssPath() (string, error) {
+	if c.cssPath == "" {
+		err := c.LoadCss()
+		if err != nil {
+			return "", err
+		}
+		return c.cssPath, nil
+	}
+	return c.cssPath, nil
 }

@@ -3,6 +3,8 @@ name: Build and deploy
 on:
   push:
     branches: ["migration-to-golang"]
+env:
+  FLY_API_TOKEN: ${{ secrets. FLY_API_TOKEN }}
 jobs:
   build-mcmamina:
     runs-on: ubuntu-latest
@@ -31,3 +33,6 @@ jobs:
 
       - name: Build BE
         run: templ generate && go build -o mcmamina ./main.go
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy
