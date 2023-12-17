@@ -40,6 +40,8 @@ export default defineConfig({
         "template/pages/SupportedUs.ts",
         "template/pages/Calendar.ts",
         // -> MCMAMINA - GENERATE PAGE
+        "template/pages/TaxBonus.ts"
+
       ],
       output: {
         dir: "dist",
