@@ -8,9 +8,18 @@ import (
 	"fmt"
 )
 
+templ SupportedUsSubmenu(isActive func(link string) bool) {
+	@components.Submenu() {
+		@components.SubmenuItem("Podporili nás", "/podpora", isActive("/podpora"))
+		@components.SubmenuItem("2% z dane", "/podpora/2-percenta-z-dane", isActive("/podpora/2-percenta-z-dane"))
+		@components.SubmenuItem("Dobrovoľníci", "/podpora/dobrovolnici", isActive("/podpora/dobrovolnici"))
+	}
+}
+
 templ SupportedUsPage(sponsors []models.Sponsor) {
 	@layout.Layout(templ.CSSClasses{"supported-us w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/podpora"}) {
-		@components.FullWidthCard(*components.NewFullWidthCard()) {
+		@SupportedUsSubmenu(func(link string) bool { return link == "/podpora"})
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mt-4")) {
 			@components.CardContent("leading-normal") {
 				<h1 class="text-4xl font-bold text-center">Podporili nás</h1>
 				<p class="mt-4 text-center">

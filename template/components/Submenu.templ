@@ -1,0 +1,16 @@
+package components
+
+templ Submenu() {
+	@FullWidthCard(NewFullWidthCard().Class("text-slate-100").Background("bg-slate-800").Padding("p-0").Margin("m-0")) {
+		@CardContent("flex flex-row justify-center gap-6") {
+			{ children... }
+		}
+	}
+}
+
+templ SubmenuItem(title, path string, active bool) {
+	<div
+ 		class={ "my-3 flex-shrink-0 flex-grow-0",
+        templ.KV("underline underline-offset-2", active) }
+	><a class="p-3 text-sm hover:opacity-95 hover:bg-slate-700 transition-colors duration-500" href={ templ.URL(path) }>{ title }</a></div>
+}
