@@ -8,10 +8,7 @@ import (
 
 templ CalendarPage() {
 	@layout.Layout(templ.CSSClasses{"calendar w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/aktivity"}) {
-		@components.Submenu() {
-			@components.SubmenuItem("Aktivity", "/aktivity", false)
-			@components.SubmenuItem("Kalendár", "/aktivity/kalendar", true)
-		}
+		@ActivitySubmenu(func(link string) bool { return link == "/aktivity/kalendar" })
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mt-8")) {
 			@components.CardContent("leading-normal") {
 				<iframe

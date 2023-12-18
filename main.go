@@ -89,6 +89,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	// MCMAMINA -->> GENERATED CODE
 	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService))
 	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService))
+	router.HandleFunc("/aktivity", handlers.Activities(log, cssService))
 	router.HandleFunc("/aktivity/kalendar", handlers.Calendar(log, cssService))
 	// MCMAMINA <<-- GENERATED CODE
 

@@ -98,7 +98,7 @@ func GeneratePage(c *cli.Context) error {
 	printBox("👉 updates vite.config.ts")
 	injectCode("vite.config.ts", "        // -> MCMAMINA - GENERATE PAGE", fmt.Sprintf("        \"%s\",\n", params.PageTsPath()))
 	printBox("👉 updates ./cmd/web/main.go")
-	injectCode("./cmd/web/main.go", "	// MCMAMINA -->> GENERATED CODE", fmt.Sprintf("	router.HandleFunc(\"%s\", handlers.%s(log, cssService))\n", params.Path, params.Name))
+	injectCode("./main.go", "	// MCMAMINA -->> GENERATED CODE", fmt.Sprintf("	router.HandleFunc(\"%s\", handlers.%s(log, cssService))\n", params.Path, params.Name))
 
 	return nil
 }
