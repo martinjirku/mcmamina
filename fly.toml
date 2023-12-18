@@ -3,12 +3,10 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "mcmamina-go"
+app = "mcmamina"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
-# primary_region = "waw"
-
 
 [[vm]]
   cpu_kind = "shared"
