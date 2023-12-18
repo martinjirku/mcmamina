@@ -9,7 +9,7 @@ import (
 templ ActivitySubmenu (isActive func(link string) bool) {
 	@components.Submenu() {
 		@components.SubmenuItem("Predpôrodný kurz", "/aktivity/predporodny-kurz", isActive("/aktivity/predporodny-kurz"))
-		@components.SubmenuItem("Podporné skupiny", "/aktivity/podpora", isActive("/aktivity/podporne-skupiny"))
+		@components.SubmenuItem("Podporné skupiny", "/aktivity/podporne-skupiny", isActive("/aktivity/podporne-skupiny"))
 		@components.SubmenuItem("Burzy", "/aktivity/burzy", isActive("/aktivity/burzy"))
 		@components.SubmenuItem("Kalendár", "/aktivity/kalendar", isActive("/aktivity/kalendar"))
 	}

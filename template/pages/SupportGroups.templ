@@ -1,0 +1,39 @@
+
+package pages
+
+import (
+	"jirku.sk/mcmamina/template/layout"
+	"jirku.sk/mcmamina/template/components"
+)
+
+templ SupportGroupsPage() {
+	@layout.Layout(templ.CSSClasses{"support-groups w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/aktivity"}) {
+		@ActivitySubmenu(func(link string) bool { return link == "/aktivity/podporne-skupiny" })
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0")) {
+			@components.CardContent("") {
+				<h1 class="text-2xl font-bold pb-4">Podporné skupiny</h1>
+				<p class="text-base text-justify pb-4">
+					Vitajte na stránke, kde spájame sily a srdcia v jedinečnom kruhu podpory. Zameriavame sa na poskytovanie podpory, poradenstva a vzájomného pochopenia v oblastiach ako sú dojčenie, pôrod a rodičovstvo. Naša komunita je vedená tak, aby poskytla bezpečné miesto pre zdieľanie skúseností, poznatkov, či povzbudenia.
+				</p>
+				<p class="text-base text-justify pb-8">
+					Podporné skupiny sú viac než len zbierka individuálnych príbehov. Sú to spoločenstvá, kde môžete nájsť pochopenie, empatiu a cenné informácie. Či už sa snažíte navigovať v komplikovanom svete dojčenia, hľadáte rady ohľadom pôrodu, alebo sa len potrebujete spojiť s ľuďmi, ktorí chápu vaše výzvy, ste na správnom mieste.
+				</p>
+				<h2 class="text-xl font-bold">Podporná skupina - dojčenie</h2>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-2"/>
+				<p class="text-base text-justify pb-8">
+					Už počas tehotenstva uvažuje každá matka o otázke dojčenia. Dojčenie je veľmi citlivá téma od samotného začiatku a s tým je spojené množstvo otázok a nejasností. Preto spolu s laktačnou poradkyňou organizujeme túto podpornú skupinu.
+				</p>
+				<h2 class="text-xl font-bold">Podporná skupina pre ženy - Jedna pre druhú</h2>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-2"/>
+				<p class="text-base text-justify pb-8">
+					Je ucelený koncept šiestich stretnutí v uzavretej skupine žien. Ponúkame ženám bezpečný priestor na zdieľanie toho, čo práve žijú a prežívajú. Vytvárame im tak čas, ktorý môžu venovať sami sebe, svojim potrebám a emóciám. Každé stretnutie je tematicky zamerané. Témy im pomáhajú zlepšiť svoju komunikáciu, rodičovské či partnerské zručnosti a to práve tým, že spoznajú lepšie samu seba. Skupinu sprevádza žena, matka a psychologička Barbora Surovcová.
+				</p>
+				<h2 class="text-xl font-bold">Podporná skupina - Čaj s dulou</h2>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-2"/>
+				<p class="text-base text-justify pb-8">
+					Príďte príjemne stráviť čas na podpornom stretnutí ČAJ S DULOU, ktorého obsahom je riadená diskusia na témy tehotenstva, pôrodu a starostlivosti o bábätko. Stretnutie je pod vedením duly Bc. Petry Strhárskej, ktorá ochotne zodpovie na vaše otázky. Povieme si, kto je to dula a ako Vás v tomto krásnom životnom období môže podporiť. Dozviete sa v čom vám môže pomôcť počas pôrodu, aj to, kam už jej kompetencie nesiahajú.
+				</p>
+			}
+		}
+	}
+}

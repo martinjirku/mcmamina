@@ -47,6 +47,7 @@ export default defineConfig({
         "template/pages/SupportedUs.ts",
         "template/pages/Calendar.ts",
         // -> MCMAMINA - GENERATE PAGE
+        "template/pages/SupportGroups.ts",
         "template/pages/BabyDeliveryCourse.ts",
         "template/pages/Activities.ts",
         "template/pages/TaxBonus.ts",
