@@ -87,6 +87,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
 	// MCMAMINA -->> GENERATED CODE
+	router.HandleFunc("/aktivity/burzy", handlers.Marketplace(log, cssService))
 	router.HandleFunc("/aktivity/podporne-skupiny", handlers.SupportGroups(log, cssService))
 	router.HandleFunc("/aktivity/predporodny-kurz", handlers.BabyDeliveryCourse(log, cssService))
 	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService))

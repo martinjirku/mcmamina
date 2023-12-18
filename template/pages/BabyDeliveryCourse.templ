@@ -9,9 +9,9 @@ import (
 templ BabyDeliveryCoursePage() {
 	@layout.Layout(templ.CSSClasses{"baby-delivery-course w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/aktivity"}) {
 		@ActivitySubmenu(func(link string) bool { return link == "/aktivity/predporodny-kurz" })
-		@components.FullWidthCard(components.NewFullWidthCard().Class("text-base").Margin("mb-0")) {
+		@components.FullWidthCard(components.NewFullWidthCard().Class("text-base").Margin("mb-0").Padding("py-10 px-5 md:py-10 xl:py-16")) {
 			@components.CardContent("") {
-				<h1 class="text-2xl font-bold pb-4">Predpôrodný kurz</h1>
+				<h1 class="text-3xl font-bold pb-6 text-center">Predpôrodný kurz</h1>
 				<p class="text-base text-justify pb-4">
 					Tento kurz pozostáva z teoretických prednášok a praktických rád. Trvá 6 týždňov. Prihlásiť sa môžete vyplnením online prihlášky alebo zaslaním emailu na adresu <a class="underline" href="mailto:predporodnykurz@mcmamina.sk">predporodnykurz@mcmamina.sk</a>.
 				</p>

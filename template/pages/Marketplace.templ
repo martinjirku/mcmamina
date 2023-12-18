@@ -1,0 +1,42 @@
+
+package pages
+
+import (
+	"jirku.sk/mcmamina/template/layout"
+	"jirku.sk/mcmamina/template/components"
+)
+
+templ MarketplacePage() {
+	@layout.Layout(templ.CSSClasses{"marketplace w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/aktivity"}) {
+		@ActivitySubmenu(func(link string) bool { return link == "/aktivity/burzy" })
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0").Padding("py-10 px-5 md:py-10 xl:py-16")) {
+			@components.CardContent("") {
+				<h1 class="text-3xl font-bold pb-6 text-center">Burzy</h1>
+				<p class="text-base text-justify pb-8">
+					Sme centrum, ktoré sa snaží podporovať rodiny a komunitu, a preto s hrdosťou pravidelne organizujeme aj burzy. Tieto udalosti nie sú len skvelou príležitosťou na nákup kvalitného a cenovo dostupného detského oblečenia, hračiek a potrieb pre domácnosť, ale tiež poskytujú ideálnu platformu pre spájanie ľudí a vytváranie nových priateľstiev.
+				</p>
+				<h2 class="text-xl font-bold">Jarná a jesenná burza</h2>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-2"/>
+				<p class="text-base text-justify pb-4">
+					Naša burza je skvelá príležitosť predať veci, ktoré už nevyužijete a zároveň si môžete výhodne nakúpiť, čo práve potrebujete. Vždy je z čoho vyberať.
+				</p>
+				<p class="text-base text-justify pb-8">
+					Na predaj oblečenia je potrebná registrácia prostredníctvom mailovej adresy uvedenej na plagáte, ktorý zverejňujeme na našej FB stránke vždy vo februári a auguste. Preto nás sledujte, počet predávajúcich je limitovaný.
+				</p>
+				<h2 class="text-xl font-bold">Handmade zimná burza</h2>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-2"/>
+				<p class="text-base text-justify pb-8">
+					Počas Handmade zimnej burzy si môžete nakúpiť originálne výrobky, darčeky, potešiť seba, svojich blízkych a taktiež podporiť šikovných výrobcov.
+				</p>
+				<h2 class="text-xl font-bold">Cvičenia</h2>
+				<hr class="h-px border-t-0 bg-gradient-to-r from-indigo-500 to-pink-500 my-2"/>
+				<p class="text-base text-justify pb-4">
+					Cvičenie pre ženy:  je skupinové cvičenie, s rôznymi pomôckami pod vedením fyzioterapeutky Mgr. Lenky Dlhošovej. Posilnenie, ohybnosť, individuálny prístup
+				</p>
+				<p class="text-base text-justify pb-8">
+					Tehotenské cvičenie: Je skupinové cvičenie pre tehotné ženy pod vedením fyzioterapeutky Bc. Petry Strhárskej, zamerané na pozitívne ovplyvnenie zmien prebiehajúcich v tehotenstve.
+				</p>
+			}
+		}
+	}
+}

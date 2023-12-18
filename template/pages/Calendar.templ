@@ -9,8 +9,9 @@ import (
 templ CalendarPage() {
 	@layout.Layout(templ.CSSClasses{"calendar w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/aktivity"}) {
 		@ActivitySubmenu(func(link string) bool { return link == "/aktivity/kalendar" })
-		@components.FullWidthCard(components.NewFullWidthCard().Margin("mt-8")) {
+		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0").Padding("py-10 px-5 md:py-10 xl:py-16")) {
 			@components.CardContent("leading-normal") {
+				<h1 class="text-3xl font-bold pb-6 text-center">Kalendár</h1>
 				<iframe
  					title="Kalendár"
  					class="w-full"
