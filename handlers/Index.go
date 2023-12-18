@@ -84,7 +84,6 @@ func (h *IndexHandler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *IndexHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h.Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if r.Method == http.MethodPost {
 		// todo: handle POST

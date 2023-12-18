@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"jirku.sk/mcmamina/handlers"
+	"jirku.sk/mcmamina/pkg/middleware"
 	"jirku.sk/mcmamina/services"
 )
 
@@ -26,7 +27,7 @@ const (
 var distFS embed.FS
 
 func main() {
-	log := slog.Default()
+	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	err := godotenv.Load()
 	if err != nil {
 		log.Error("Error loading .env file", slog.Any("error", err))
@@ -44,6 +45,7 @@ type configuration struct {
 func setupWebserver(log *slog.Logger, calendarService *services.CalendarService) {
 	config := configuration{}
 	router := mux.NewRouter()
+
 	flag.StringVar(&config.publicPath, "public", "", "Usage description of the flag")
 	flag.StringVar(&config.host, "host", "0.0.0.0", "specify the app host")
 	flag.IntVar(&config.port, "port", 8080, "specfiy the port application will listen")
@@ -69,8 +71,13 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 		workingFolder = os.DirFS(config.publicPath)
 	}
 
-	cssService := services.NewCSS(workingFolder, log)
+	cssService := services.NewCSS(workingFolder, serviceLog(log, "css"))
 	sponsorService := services.NewSponsorService()
+
+	// Logger middleware
+	router.Use(middleware.Recover(middlwareLog(log, "recover")))
+	router.Use(middleware.Logger(middlwareLog(log, "logger")))
+
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
@@ -131,4 +138,12 @@ func getContentType(filePath string) string {
 
 func validatePort(port int) bool {
 	return port > 0 && port <= 65535
+}
+
+func middlwareLog(log *slog.Logger, name string) *slog.Logger {
+	return log.With(slog.String("type", "middleware"), slog.String("name", name))
+}
+
+func serviceLog(log *slog.Logger, name string) *slog.Logger {
+	return log.With(slog.String("type", "service"), slog.String("name", name))
 }
