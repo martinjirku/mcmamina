@@ -12,16 +12,16 @@ templ Layout(class templ.CSSClasses, isActive func(link string) bool) {
 					@MenuItem("/podpora", "Podporili nás", isActive("/podpora"))
 				</ul>
 			</nav>
-			<nav class="w-full md:hidden left-0 flex-col" aria-label="Hlavné">
+			<nav class="mobile-menu w-full md:hidden left-0 flex-col" aria-label="Hlavné">
 				<div class="w-full flex relative bg-indigo-400 z-30 py-4">
-					<h1 class="font-light p-2 py-2 text-2xl">Mc Mamina</h1>
-					<button class="stroke-indigo-100 absolute right-0 pr-2" aria-label="Open menu">
+					<h1 class="font-light p-2 py-2 text-2xl"><a href="/">Mc Mamina</a></h1>
+					<button class="hamburger stroke-indigo-100 absolute right-0 pr-2" aria-label="Open menu">
 						@AnimatedHamburger()
 					</button>
 				</div>
 				<ul
- 					class={ "flex z-10 flex-col gap-6 absolute top-20 bg-indigo-400 w-full text-cyan-50 transition-transform ease-in-out duration-500 transform",
-					templ.KV("h-auto translate-y-0 opacity-100", true), "h-0 overflow-hidden -translate-y-full opacity-0" }
+ 					class={ "flex z-10 flex-col gap-3 absolute top-20 bg-indigo-400 w-full text-cyan-50 transition-transform ease-in-out duration-500 transform",
+					"h-0 overflow-hidden -translate-y-full opacity-0" }
 				>
 					@MenuItem("/", "Domov", isActive("/"))
 					@MenuItem("/o-nas", "O nás", isActive("/o-nas"))
@@ -34,6 +34,7 @@ templ Layout(class templ.CSSClasses, isActive func(link string) bool) {
 		</main>
 		@Footer()
 	</div>
+	<script type="module" src="/Layout.es"></script>
 }
 
 templ MenuItem(href string, content string, isActive bool) {

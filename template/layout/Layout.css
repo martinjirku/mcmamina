@@ -1,0 +1,40 @@
+svg.mc-animated-hamburger {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-miterlimit: 1.5;
+    cursor: pointer;
+}
+
+svg.mc-animated-hamburger path {
+    fill: none;
+    stroke-width: 1px;
+}
+
+svg.mc-animated-hamburger #top,
+svg.mc-animated-hamburger #bottom {
+  stroke-dasharray: 30, 75.39;
+  transition: all 0.6s cubic-bezier(0.6, 0.33, 0.67, 1.29);
+}
+
+.active svg.mc-animated-hamburger #top,
+.active svg.mc-animated-hamburger #bottom {
+    stroke-dasharray: 75.39;
+    stroke-dashoffset: -60;
+}
+
+svg.mc-animated-hamburger:nth-child(2) {
+    transform: rotate(0deg);
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+svg.mc-animated-hamburger:nth-child(2) path {
+    transition: all 0.4s ease-in-out 0.6s;
+}
+
+.active svg.mc-animated-hamburger:nth-child(2) {
+    transform: rotate(180deg);
+}
+
+svg.mc-animated-hamburger #top {
+    stroke-dasharray: 30, 88;
+}

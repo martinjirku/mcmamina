@@ -41,6 +41,7 @@ export default defineConfig({
     manifest: true,
     rollupOptions: {
       input: [
+        "template/layout/Layout.ts",
         "template/pages/Index.ts",
         "template/pages/AboutUs.ts",
         "template/pages/SupportedUs.ts",
