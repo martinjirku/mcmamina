@@ -76,6 +76,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 
 	// Logger middleware
 	router.Use(middleware.Recover(middlwareLog(log, "recover")))
+	router.Use(middleware.RequestID(middlwareLog(log, "requestID")))
 	router.Use(middleware.Logger(middlwareLog(log, "logger")))
 
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
