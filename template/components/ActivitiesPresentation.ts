@@ -65,7 +65,7 @@ let activeActivity: ActiveItem = new Proxy<ActiveItem>(
             (activeActivity.el.nextSibling as HTMLElement) ??
             (activitiesButtonsElement[0] as HTMLElement) ??
             undefined;
-        }, 5e3);
+        }, 30e3);
       }
       return true;
     },

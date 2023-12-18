@@ -95,9 +95,13 @@ func handleFiles(r *mux.Router, folder http.FileSystem) {
 	fs := http.FileServer(folder)
 
 	r.PathPrefix("/").Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		filePath := filepath.Join("your_directory_path", r.URL.Path)
-		contentType := getContentType(filePath)
+		contentType := getContentType(r.URL.Path)
 		w.Header().Set("Content-Type", contentType)
+		if contentType != "application/javascript" {
+			w.Header().Set("Cache-Control", "public, max-age=3600") // 1 hour in seconds
+		} else {
+			w.Header().Set("Cache-Control", "public, max-age=60") // 1 hour in seconds
+		}
 		fs.ServeHTTP(w, r)
 	}))
 }
