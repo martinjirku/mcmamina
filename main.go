@@ -35,15 +35,28 @@ func main() {
 	setupWebserver(log, calendarService)
 }
 
+type configuration struct {
+	publicPath string
+	port       int
+	host       string
+}
+
 func setupWebserver(log *slog.Logger, calendarService *services.CalendarService) {
+	config := configuration{}
 	router := mux.NewRouter()
-	var publicPath string
-	flag.StringVar(&publicPath, "public", "", "Usage description of the flag")
+	flag.StringVar(&config.publicPath, "public", "", "Usage description of the flag")
+	flag.StringVar(&config.host, "host", "0.0.0.0", "specify the app host")
+	flag.IntVar(&config.port, "port", 8080, "specfiy the port application will listen")
 	flag.Parse()
+
+	if !validatePort(config.port) {
+		log.Error("invalid port")
+		panic("invalid port")
+	}
 
 	var workingFolder fs.FS
 	log.Info("reading public folder")
-	if publicPath == "" {
+	if config.publicPath == "" {
 		log.Info("No public folder found, using embed FS")
 		log.Info("accessing embed FS")
 		folder, err := fs.Sub(distFS, "dist")
@@ -52,8 +65,8 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 		}
 		workingFolder = folder
 	} else {
-		log.Info(fmt.Sprintf("serving specified location %s", publicPath))
-		workingFolder = os.DirFS(publicPath)
+		log.Info(fmt.Sprintf("serving specified location %s", config.publicPath))
+		workingFolder = os.DirFS(config.publicPath)
 	}
 
 	cssService := services.NewCSS(workingFolder, log)
@@ -72,7 +85,10 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	// MCMAMINA <<-- GENERATED CODE
 
 	handleFiles(router, http.FS(workingFolder))
-	http.ListenAndServe("0.0.0.0:8080", router)
+
+	addr := fmt.Sprintf("%s:%d", config.host, config.port)
+	log.Info(fmt.Sprintf("starting server at %s", addr))
+	http.ListenAndServe(addr, router)
 }
 
 func handleFiles(r *mux.Router, folder http.FileSystem) {
@@ -107,4 +123,8 @@ func getContentType(filePath string) string {
 	}
 
 	return contentType
+}
+
+func validatePort(port int) bool {
+	return port > 0 && port <= 65535
 }

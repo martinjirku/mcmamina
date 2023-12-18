@@ -3,9 +3,9 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-args_bin = []
+args_bin = ["--host", "localhost", "--public", "./dist"]
 bin = "./tmp/main"
-cmd = "go build -o ./tmp/main ./cmd/web/main.go"
+cmd = "go build -o ./tmp/main ./main.go"
 delay = 200
 exclude_dir = ["assets", "tmp", "vendor", "node_modules", "styles", "public"]
 exclude_file = []

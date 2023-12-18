@@ -4,15 +4,11 @@
 #
 
 app = "mcmamina-go"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
 # primary_region = "waw"
 
-# [http_service]
-#   internal_port = 8080
-#   force_https = true
-#   auto_stop_machines = true
-#   auto_start_machines = true
-#   min_machines_running = 0
-#   processes = ["app"]
 
 [[vm]]
   cpu_kind = "shared"
@@ -21,10 +17,8 @@ app = "mcmamina-go"
 
 [[services]]
 internal_port = 8080
-processes = ["mcmamina"]
 protocol = "tcp"
 script_checks = []
-
 
 [services.concurrency]
 hard_limit = 25
@@ -54,4 +48,5 @@ path = "/healthcheck"
 protocol = "http"
 timeout = "2s"
 tls_skip_verify = false
+
 [services.http_checks.headers]
