@@ -7,8 +7,11 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -37,9 +40,10 @@ func main() {
 }
 
 type configuration struct {
-	publicPath string
-	port       int
-	host       string
+	publicPath  string
+	port        int
+	host        string
+	panoramaURL string
 }
 
 func setupWebserver(log *slog.Logger, calendarService *services.CalendarService) {
@@ -48,6 +52,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 
 	flag.StringVar(&config.publicPath, "public", "", "Usage description of the flag")
 	flag.StringVar(&config.host, "host", "0.0.0.0", "specify the app host")
+	flag.StringVar(&config.panoramaURL, "panorama", "http://mcmamina.panfoto.sk/", "specify the panorama URL for reverse proxy")
 	flag.IntVar(&config.port, "port", 8080, "specfiy the port application will listen")
 	flag.Parse()
 
@@ -84,6 +89,26 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 		w.Write([]byte("OK"))
 	})
 
+	panoramaURL, err := url.Parse(config.panoramaURL)
+	if err != nil {
+		log.Error("invalid panorama URL")
+	} else {
+		router.PathPrefix("/panorama").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			proxy := httputil.NewSingleHostReverseProxy(panoramaURL)
+			proxy.Director = func(req *http.Request) {
+				req.URL.Scheme = panoramaURL.Scheme
+				req.URL.Host = panoramaURL.Host
+				originalPath := req.URL.Path
+				if strings.HasPrefix(originalPath, "/panorama") {
+					req.RequestURI = strings.TrimPrefix(originalPath, "/panorama")
+					req.URL.Path = strings.TrimPrefix(originalPath, "/panorama")
+				}
+				req.Host = panoramaURL.Host
+			}
+			proxy.ServeHTTP(w, r)
+		})
+	}
+
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
 	// MCMAMINA -->> GENERATED CODE
@@ -96,7 +121,6 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	router.HandleFunc("/aktivity", handlers.Activities(log, cssService))
 	router.HandleFunc("/aktivity/kalendar", handlers.Calendar(log, cssService))
 	// MCMAMINA <<-- GENERATED CODE
-
 	handleFiles(router, http.FS(workingFolder))
 
 	addr := fmt.Sprintf("%s:%d", config.host, config.port)

@@ -9,7 +9,7 @@ templ AboutUsPage() {
 	@layout.Layout(templ.CSSClasses{"about-us w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "/o-nas"}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0").Background("bg-indigo-950").Padding("px-0 md:px-5")) {
 			<iframe
- 				src="https://www.mcmamina.sk/nova_stranka/vtour/"
+ 				src="/panorama/"
  				title="Virtuálna prehliadka"
  				class="w-full lg:w-4/5 h-96"
 			></iframe>

@@ -10,7 +10,8 @@
             "request": "launch",
             "mode": "debug",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/main.go"
+            "program": "${workspaceFolder}/main.go",
+            "args": ["--port", "8080", "--host", "localhost"]
         }
 
     ]
