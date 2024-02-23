@@ -9,7 +9,7 @@ WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm build
 
-FROM golang:1.21.5 as be-builder
+FROM golang:1.22.0 as be-builder
 RUN go install github.com/a-h/templ/cmd/templ@latest
 
 COPY . /app

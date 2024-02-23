@@ -7,11 +7,11 @@ tasks:
     cmds:
       - go install github.com/cosmtrek/air@latest
       - go install github.com/a-h/templ/cmd/templ@latest
-      - npm install --silent
+      - pnpm install --silent
 
   templwatch:
     cmds:
-      - templ generate --watch
+      - templ generate -watch -source-map-visualisations=false
   csswatch:
     cmds:
       - npx tailwindcss -i ./styles/main.css -o ./dist/main.css --watch

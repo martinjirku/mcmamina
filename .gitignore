@@ -6,3 +6,5 @@ tmp/
 dist/
 .env
 vendor/**/*
+*_templ.txt
+template**/*.html
