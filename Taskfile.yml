@@ -1,5 +1,7 @@
 version: '3'
 
+dotenv: ['.env']
+
 tasks:
   default:
     deps: [tswatch, templwatch, csswatch, serverwatch]
@@ -28,3 +30,17 @@ tasks:
   buildassets:
     cmds:
       - esbuild --bundle --minify css/index.css > public/bundle.css
+  
+  dbstart:
+    cmds:
+      - docker run --name mcmamina -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -e POSTGRES_USER=$POSTGRES_USER -v ./.data:/var/lib/postgresql/data -p 5432:5432 -d postgres:alpine
+  dbstop:
+    cmds:
+      - docker stop mcmamina
+      - docker rm mcmamina
+  dbup:
+    cmds:
+      - migrate -path ./migrations -database "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable" up
+  dbdown:
+    cmds:
+      - migrate -path ./migrations -database "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable" down
