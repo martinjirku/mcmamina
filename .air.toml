@@ -7,15 +7,15 @@ args_bin = ["--host", "localhost", "--public", "./dist"]
 bin = "./tmp/main"
 cmd = "go build -o ./tmp/main ./main.go"
 delay = 200
-# exclude_dir = ["assets", "tmp", "vendor", "node_modules", "styles", "public"]
+exclude_dir = ["assets", "tmp", "vendor", "node_modules", "public"]
 # exclude_file = []
-# exclude_regex = ["_test.go", ".ts", ".css"]
+exclude_regex = [".*_templ.go"]
 exclude_unchanged = false
 follow_symlink = false
 # full_bin = ""
 include_dir = ["handlers", "models", "services", "utils", "pkg", "template"]
 include_ext = ["go", "templ"]
-include_file = ["main.go"]
+include_file = ["main.go", "dist/assets/style-*.css"]
 kill_delay = "0.3s"
 log = "build-errors.log"
 poll = false
@@ -25,7 +25,7 @@ pre_cmd = []
 rerun = false
 rerun_delay = 500
 send_interrupt = false
-stop_on_error = false
+stop_on_error = true
 
 [color]
 app = ""

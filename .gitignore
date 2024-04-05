@@ -9,3 +9,4 @@ vendor/**/*
 *_templ.txt
 template**/*.html
 .data/
+.tasks/
