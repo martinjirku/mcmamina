@@ -41,17 +41,17 @@ svg.mc-animated-hamburger #top {
 
 @media (min-height: 1000px) {
     .footer {
-        bottom: -20rem;
+        bottom: -24rem;
     }
 }
-@media(min-height: 300px) and (max-height: 1000px) {
+@media(min-height: 600px) and (max-height: 1000px) {
     .footer {
-        bottom: -26rem;
+        bottom: -55rem;
     }
 }
 
-@media(max-height: 300px) {
+@media(max-height: 600px) {
     .footer {
-        bottom: -30rem;
+        bottom: unset;
     }
 }
