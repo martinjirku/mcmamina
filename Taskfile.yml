@@ -47,7 +47,7 @@ tasks:
       - ./node_modules/
 
   watch:
-    deps: [watch:ts, watch:css, watch:templ, watch:server]
+    deps: [watch:ts, watch:css, watch:templ, watch:server:wait]
   watch:templ:
     deps: [bin:templ]
     cmds:
@@ -58,14 +58,19 @@ tasks:
   watch:ts:
     cmds:
       - npx vite build -w
-  watch:server:
-    deps: [bin:air]
+  watch:server:wait:
     cmds:
       - sleep 1
+      - task: watch:server
+  watch:server:
+    deps: [bin:air]
+    # sources:
+    #   - main.go
+    #   - services/**/*.go
+    # generates:
+    #   - ./tmp/main
+    cmds:
       - .task/bin/air -c .air.toml
-
-  buildserver:
-      - go build -v -i main.go
 
   db:start:
     cmds:

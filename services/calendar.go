@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -45,6 +46,8 @@ func (s *CalendarService) getEvents(ctx context.Context, timeMin, timeMax time.T
 
 	var result []models.Event
 
+	eventTitleToIgnore := strings.ToLower("Prestávka - sme zatvorení")
+
 	var eventsToGet []string
 	for _, event := range events.Items {
 		if event == nil {
@@ -52,6 +55,8 @@ func (s *CalendarService) getEvents(ctx context.Context, timeMin, timeMax time.T
 		}
 		if event.Recurrence != nil && len(event.Recurrence) > 0 {
 			eventsToGet = append(eventsToGet, event.Id)
+		} else if strings.EqualFold(strings.ToLower(event.Summary), eventTitleToIgnore) {
+			continue
 		} else {
 			result = append(result, newEventFromGoogle(event))
 		}
@@ -79,6 +84,9 @@ func (s *CalendarService) getEvents(ctx context.Context, timeMin, timeMax time.T
 		close(gatheredEvents)
 	}()
 	for events := range gatheredEvents {
+		if len(events) > 0 && strings.EqualFold(strings.ToLower(events[0].Title), eventTitleToIgnore) {
+			continue
+		}
 		result = append(result, events...)
 	}
 	return result, nil
@@ -111,6 +119,7 @@ func (s *CalendarService) GetEvents(ctx context.Context, timeMin, timeMax time.T
 		if ok {
 			return events, nil
 		}
+
 	}
 
 	events, err := s.getEvents(ctx, timeMin, timeMax)

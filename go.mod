@@ -3,7 +3,7 @@ module jirku.sk/mcmamina
 go 1.22.0
 
 require (
-	github.com/a-h/templ v0.2.648
+	github.com/a-h/templ v0.2.663
 	github.com/alecthomas/chroma v0.10.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1

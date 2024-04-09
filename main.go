@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"flag"
 	"fmt"
@@ -10,8 +11,11 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -124,9 +128,34 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	// MCMAMINA <<-- GENERATED CODE
 	handleFiles(router, http.FS(workingFolder))
 
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGABRT)
+
 	addr := fmt.Sprintf("%s:%d", config.host, config.port)
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: router,
+	}
 	log.Info(fmt.Sprintf("starting server at %s", addr))
-	http.ListenAndServe(addr, router)
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Error(fmt.Errorf("failed to start server %s", err).Error())
+			os.Exit(1)
+		}
+	}()
+	// Block until we receive our signal.
+	signal := <-sigs
+	log.Info(fmt.Sprintf("received \"%s\" signal, shutting down", signal))
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
+	defer cancel()
+
+	// Doesn't block if no connections, but will otherwise wait
+	// until the timeout deadline.
+	log.Info("shutting down...")
+	srv.Shutdown(ctx)
+	log.Info("server shutted down")
+	os.Exit(0)
 }
 
 func handleFiles(r *mux.Router, folder http.FileSystem) {
