@@ -5,12 +5,31 @@ import (
 	"jirku.sk/mcmamina/template/components"
 )
 
-templ LoginPage() {
+type LoginPageDto struct {
+	csrf string
+	username string
+	password string
+}
+
+func NewLoginPageDto(csrf string, username string, password string) LoginPageDto {
+	return LoginPageDto{
+		csrf: csrf,
+		username: username,
+		password: password,
+	}
+}
+
+templ LoginPage(dto LoginPageDto) {
 	@layout.Layout(templ.CSSClasses{"login w-full bg-cover bg-center text-indigo-800 font-light"}, func(link string) bool { return link == "prihlasenie"}) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0")) {
 			@components.CardContent("") {
-				<div>Prihlásenie Page</div>
-				
+				<div>Prihlásenie</div>
+				<form action="/prihlasenie" method="post">
+					<input type="hidden" name="csrf" value={dto.csrf} />
+					<input type="text" name="username" placeholder="Prihlásenie" value={dto.username} />
+					<input type="password" name="password" placeholder="Heslo" value={dto.password}/>
+					<button type="submit">Prihlásiť</button>
+				</form>
 			}
 		}
 	}
