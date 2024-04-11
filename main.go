@@ -81,55 +81,28 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 		workingFolder = os.DirFS(config.publicPath)
 	}
 
-	cssService := services.NewCSS(workingFolder, serviceLog(log, "css"))
-	sponsorService := services.NewSponsorService()
-	recaptchaService := services.NewRecaptchaService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CAPTCHA_SITE))
-
-	// Logger middleware
-	router.Use(middleware.Recover(middlewareLog(log, "recover")))
-	router.Use(middleware.RequestID(middlewareLog(log, "requestID")))
-	router.Use(middleware.Logger(middlewareLog(log, "logger")))
-
-	router.Use(middleware.Csrf)
-	// router.Use(middleware.AuthMiddleware(store))
+	cssService, sponsorService, recaptchaService := prepareServices(log, workingFolder)
+	prepareMiddleware(router, log)
 
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
 
-	panoramaURL, err := url.Parse(config.panoramaURL)
-	if err != nil {
-		log.Error("invalid panorama URL")
-	} else {
-		router.PathPrefix("/panorama").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			proxy := httputil.NewSingleHostReverseProxy(panoramaURL)
-			proxy.Director = func(req *http.Request) {
-				req.URL.Scheme = panoramaURL.Scheme
-				req.URL.Host = panoramaURL.Host
-				originalPath := req.URL.Path
-				if strings.HasPrefix(originalPath, "/panorama") {
-					req.RequestURI = strings.TrimPrefix(originalPath, "/panorama")
-					req.URL.Path = strings.TrimPrefix(originalPath, "/panorama")
-				}
-				req.Host = panoramaURL.Host
-			}
-			proxy.ServeHTTP(w, r)
-		})
-	}
+	setupPanorama(config.panoramaURL, router, log)
 
-	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
-	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
+	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP).Methods("GET")
+	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService)).Methods("GET")
 	// MCMAMINA -->> GENERATED CODE
 	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService))
-	router.HandleFunc("/aktivity/burzy", handlers.Marketplace(log, cssService))
-	router.HandleFunc("/aktivity/podporne-skupiny", handlers.SupportGroups(log, cssService))
-	router.HandleFunc("/aktivity/predporodny-kurz", handlers.BabyDeliveryCourse(log, cssService))
-	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService))
-	router.HandleFunc("/podpora/dobrovolnici", handlers.Volunteers(log, cssService))
-	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService))
-	router.HandleFunc("/aktivity", handlers.Activities(log, cssService))
-	router.HandleFunc("/aktivity/kalendar", handlers.Calendar(log, cssService))
+	router.HandleFunc("/aktivity/burzy", handlers.Marketplace(log, cssService)).Methods("GET")
+	router.HandleFunc("/aktivity/podporne-skupiny", handlers.SupportGroups(log, cssService)).Methods("GET")
+	router.HandleFunc("/aktivity/predporodny-kurz", handlers.BabyDeliveryCourse(log, cssService)).Methods("GET")
+	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService)).Methods("GET")
+	router.HandleFunc("/podpora/dobrovolnici", handlers.Volunteers(log, cssService)).Methods("GET")
+	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService)).Methods("GET")
+	router.HandleFunc("/aktivity", handlers.Activities(log, cssService)).Methods("GET")
+	router.HandleFunc("/aktivity/kalendar", handlers.Calendar(log, cssService)).Methods("GET")
 	// MCMAMINA <<-- GENERATED CODE
 	handleFiles(router, http.FS(workingFolder))
 
@@ -161,6 +134,43 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	srv.Shutdown(ctx)
 	log.Info("server shutted down")
 	os.Exit(0)
+}
+
+func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.SponsorService, *services.RecaptchaService) {
+	cssService := services.NewCSS(fs, serviceLog(log, "css"))
+	sponsorService := services.NewSponsorService()
+	recaptchaService := services.NewRecaptchaService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CAPTCHA_SITE))
+	return cssService, sponsorService, recaptchaService
+}
+
+func prepareMiddleware(router *mux.Router, log *slog.Logger) {
+	router.Use(middleware.Recover(middlewareLog(log, "recover")))
+	router.Use(middleware.RequestID(middlewareLog(log, "requestID")))
+	router.Use(middleware.Logger(middlewareLog(log, "logger")))
+	router.Use(middleware.Csrf)
+	// router.Use(middleware.AuthMiddleware(store))
+}
+
+func setupPanorama(panoramaPath string, router *mux.Router, log *slog.Logger) {
+	panoramaURL, err := url.Parse(panoramaPath)
+	if err != nil {
+		log.Error("invalid panorama URL")
+	} else {
+		router.PathPrefix("/panorama").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			proxy := httputil.NewSingleHostReverseProxy(panoramaURL)
+			proxy.Director = func(req *http.Request) {
+				req.URL.Scheme = panoramaURL.Scheme
+				req.URL.Host = panoramaURL.Host
+				originalPath := req.URL.Path
+				if strings.HasPrefix(originalPath, "/panorama") {
+					req.RequestURI = strings.TrimPrefix(originalPath, "/panorama")
+					req.URL.Path = strings.TrimPrefix(originalPath, "/panorama")
+				}
+				req.Host = panoramaURL.Host
+			}
+			proxy.ServeHTTP(w, r)
+		})
+	}
 }
 
 func handleFiles(r *mux.Router, folder http.FileSystem) {
