@@ -26,8 +26,9 @@ import (
 
 // .env keys
 const (
-	GOOGLE_API_KEY     = "GOOGLE_API_KEY"
-	GOOGLE_CALENDAR_ID = "GOOGLE_CALENDAR_ID"
+	GOOGLE_API_KEY      = "GOOGLE_API_KEY"
+	GOOGLE_CALENDAR_ID  = "GOOGLE_CALENDAR_ID"
+	GOOGLE_CAPTCHA_SITE = "GOOGLE_CAPTCHA_SITE"
 )
 
 //go:embed dist dist/.vite
@@ -82,11 +83,15 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 
 	cssService := services.NewCSS(workingFolder, serviceLog(log, "css"))
 	sponsorService := services.NewSponsorService()
+	recaptchaService := services.NewRecaptchaService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CAPTCHA_SITE))
 
 	// Logger middleware
-	router.Use(middleware.Recover(middlwareLog(log, "recover")))
-	router.Use(middleware.RequestID(middlwareLog(log, "requestID")))
-	router.Use(middleware.Logger(middlwareLog(log, "logger")))
+	router.Use(middleware.Recover(middlewareLog(log, "recover")))
+	router.Use(middleware.RequestID(middlewareLog(log, "requestID")))
+	router.Use(middleware.Logger(middlewareLog(log, "logger")))
+
+	router.Use(middleware.Csrf)
+	// router.Use(middleware.AuthMiddleware(store))
 
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -116,7 +121,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP)
 	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService))
 	// MCMAMINA -->> GENERATED CODE
-	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService))
+	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService))
 	router.HandleFunc("/aktivity/burzy", handlers.Marketplace(log, cssService))
 	router.HandleFunc("/aktivity/podporne-skupiny", handlers.SupportGroups(log, cssService))
 	router.HandleFunc("/aktivity/predporodny-kurz", handlers.BabyDeliveryCourse(log, cssService))
@@ -200,7 +205,7 @@ func validatePort(port int) bool {
 	return port > 0 && port <= 65535
 }
 
-func middlwareLog(log *slog.Logger, name string) *slog.Logger {
+func middlewareLog(log *slog.Logger, name string) *slog.Logger {
 	return log.With(slog.String("type", "middleware"), slog.String("name", name))
 }
 

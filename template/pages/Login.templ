@@ -3,20 +3,29 @@ package pages
 import (
 	"jirku.sk/mcmamina/template/layout"
 	"jirku.sk/mcmamina/template/components"
+	"github.com/justinas/nosurf"
 )
 
 type LoginPageDto struct {
-	csrf string
-	username string
-	password string
+	csrfToken    string
+	recaptchaKey string
+	username     string
+	errorMsg     string
 }
 
-func NewLoginPageDto(csrf string, username string, password string) LoginPageDto {
+func (mv *LoginPageDto) hasRecaptcha() bool {
+	return mv.recaptchaKey != ""
+}
+
+func NewLoginPageDto(csrfToken, username, recaptchaKey string) LoginPageDto {
 	return LoginPageDto{
-		csrf: csrf,
+		csrfToken:    csrfToken,
+		recaptchaKey: recaptchaKey,
 		username: username,
-		password: password,
 	}
+}
+func (l *LoginPageDto) SetErrorMsg(msg string) {
+	l.errorMsg = msg
 }
 
 templ LoginPage(dto LoginPageDto) {
@@ -24,12 +33,36 @@ templ LoginPage(dto LoginPageDto) {
 		@components.FullWidthCard(components.NewFullWidthCard().Margin("mb-0")) {
 			@components.CardContent("") {
 				<div>Prihlásenie</div>
-				<form action="/prihlasenie" method="post">
-					<input type="hidden" name="csrf" value={dto.csrf} />
+				<form action="/prihlasenie" method="post" id="login-form">
+					if dto.errorMsg != "" {
+						<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+							<strong class="font-bold">Chyba!</strong>
+							<span class="block sm:inline">{ dto.errorMsg }</span>
+						</div>
+					}
+					<input type="hidden" name={ nosurf.FormFieldName } value={ dto.csrfToken } />
 					<input type="text" name="username" placeholder="Prihlásenie" value={dto.username} />
-					<input type="password" name="password" placeholder="Heslo" value={dto.password}/>
-					<button type="submit">Prihlásiť</button>
+					<input type="password" name="password" placeholder="Heslo" value=""/>
+					<button
+						type="submit"
+						class={
+							"mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+							templ.KV("g-recaptcha", dto.hasRecaptcha())
+						}
+						if dto.hasRecaptcha() {
+							data-sitekey={ dto.recaptchaKey }
+							data-callback="onSubmit"
+							data-action="submit"
+						}
+					>Prihlásiť</button>
 				</form>
+				<script>
+					function onSubmit(token) {
+						console.log("submitting form");
+						document.getElementById("login-form").submit();
+					}
+				</script>
+				<script src="https://www.google.com/recaptcha/api.js"></script>
 			}
 		}
 	}

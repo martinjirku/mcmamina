@@ -18,6 +18,10 @@ type EventsGetter interface {
 type CSSPathGetter interface {
 	GetCssPath() (string, error)
 }
+type RecaptchaValidator interface {
+	ValidateCaptcha(r *http.Request) error
+	Key() string
+}
 type IndexHandler struct {
 	Log           *slog.Logger
 	EventsGetter  EventsGetter
