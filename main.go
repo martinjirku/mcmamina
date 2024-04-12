@@ -40,8 +40,7 @@ func main() {
 	if err != nil {
 		log.Error("Error loading .env file", slog.Any("error", err))
 	}
-	calendarService := services.NewCalendarService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CALENDAR_ID))
-	setupWebserver(log, calendarService)
+	setupWebserver(log)
 }
 
 type configuration struct {
@@ -51,20 +50,9 @@ type configuration struct {
 	panoramaURL string
 }
 
-func setupWebserver(log *slog.Logger, calendarService *services.CalendarService) {
-	config := configuration{}
+func setupWebserver(log *slog.Logger) {
+	config := parseConfig(log)
 	router := mux.NewRouter()
-
-	flag.StringVar(&config.publicPath, "public", "", "Usage description of the flag")
-	flag.StringVar(&config.host, "host", "0.0.0.0", "specify the app host")
-	flag.StringVar(&config.panoramaURL, "panorama", "http://mcmamina.panfoto.sk/", "specify the panorama URL for reverse proxy")
-	flag.IntVar(&config.port, "port", 8080, "specfiy the port application will listen")
-	flag.Parse()
-
-	if !validatePort(config.port) {
-		log.Error("invalid port")
-		panic("invalid port")
-	}
 
 	var workingFolder fs.FS
 	log.Info("reading public folder")
@@ -81,7 +69,7 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 		workingFolder = os.DirFS(config.publicPath)
 	}
 
-	cssService, sponsorService, recaptchaService := prepareServices(log, workingFolder)
+	cssService, sponsorService, recaptchaService, calendarService := prepareServices(log, workingFolder)
 	prepareMiddleware(router, log)
 
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
@@ -136,11 +124,27 @@ func setupWebserver(log *slog.Logger, calendarService *services.CalendarService)
 	os.Exit(0)
 }
 
-func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.SponsorService, *services.RecaptchaService) {
+func parseConfig(log *slog.Logger) configuration {
+	config := configuration{}
+	flag.StringVar(&config.publicPath, "public", "", "Usage description of the flag")
+	flag.StringVar(&config.host, "host", "0.0.0.0", "specify the app host")
+	flag.StringVar(&config.panoramaURL, "panorama", "http://mcmamina.panfoto.sk/", "specify the panorama URL for reverse proxy")
+	flag.IntVar(&config.port, "port", 8080, "specfiy the port application will listen")
+	flag.Parse()
+
+	if !validatePort(config.port) {
+		log.Error("invalid port")
+		panic("invalid port")
+	}
+	return config
+}
+
+func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.SponsorService, *services.RecaptchaService, *services.CalendarService) {
 	cssService := services.NewCSS(fs, serviceLog(log, "css"))
 	sponsorService := services.NewSponsorService()
 	recaptchaService := services.NewRecaptchaService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CAPTCHA_SITE))
-	return cssService, sponsorService, recaptchaService
+	calendarService := services.NewCalendarService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CALENDAR_ID))
+	return cssService, sponsorService, recaptchaService, calendarService
 }
 
 func prepareMiddleware(router *mux.Router, log *slog.Logger) {
