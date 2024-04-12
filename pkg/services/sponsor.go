@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	"jirku.sk/mcmamina/models"
+	"jirku.sk/mcmamina/pkg/models"
 )
 
 type SponsorService struct{}

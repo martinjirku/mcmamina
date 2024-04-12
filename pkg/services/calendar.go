@@ -11,7 +11,7 @@ import (
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
-	"jirku.sk/mcmamina/models"
+	"jirku.sk/mcmamina/pkg/models"
 )
 
 type CalendarService struct {

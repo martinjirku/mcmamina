@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"jirku.sk/mcmamina/models"
+	"jirku.sk/mcmamina/pkg/models"
 	"jirku.sk/mcmamina/template/components"
 	"jirku.sk/mcmamina/template/pages"
 )

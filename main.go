@@ -21,7 +21,7 @@ import (
 	"github.com/joho/godotenv"
 	"jirku.sk/mcmamina/handlers"
 	"jirku.sk/mcmamina/pkg/middleware"
-	"jirku.sk/mcmamina/services"
+	"jirku.sk/mcmamina/pkg/services"
 )
 
 // .env keys

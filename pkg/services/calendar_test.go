@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"jirku.sk/mcmamina/services"
+	"jirku.sk/mcmamina/pkg/services"
 )
 
 func TestCalendar(t *testing.T) {

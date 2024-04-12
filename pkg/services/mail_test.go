@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"jirku.sk/mcmamina/services"
+	"jirku.sk/mcmamina/pkg/services"
 )
 
 func TestMailSend(t *testing.T) {
