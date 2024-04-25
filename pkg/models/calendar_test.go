@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"jirku.sk/mcmamina/models"
+	"jirku.sk/mcmamina/pkg/models"
 )
 
 func getTime(s string) time.Time {

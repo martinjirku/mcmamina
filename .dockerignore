@@ -8,3 +8,4 @@
 **/.env
 **/vendor/**/*
 fly.toml
+**/.task

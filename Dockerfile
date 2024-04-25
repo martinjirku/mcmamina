@@ -1,5 +1,23 @@
-FROM node:20-slim AS fe-build
+FROM golang:1.22.0 as watch-base
+# Install Node.js
+RUN apt-get update && apt-get install -y curl
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack use pnpm@8.15.6
+RUN go install github.com/a-h/templ/cmd/templ@latest
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/go-task/task/v3/cmd/task@latest
 
+FROM watch-base as watch
+COPY . /app
+WORKDIR /app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN go mod download
+RUN templ generate
+
+FROM node:20-slim AS node-base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable

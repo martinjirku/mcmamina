@@ -64,11 +64,6 @@ tasks:
       - task: watch:server
   watch:server:
     deps: [bin:air]
-    # sources:
-    #   - main.go
-    #   - services/**/*.go
-    # generates:
-    #   - ./tmp/main
     cmds:
       - .task/bin/air -c .air.toml
 

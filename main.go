@@ -102,7 +102,7 @@ func setupWebserver(log *slog.Logger) {
 		Addr:    addr,
 		Handler: router,
 	}
-	log.Info(fmt.Sprintf("starting server at %s", addr))
+	log.Info(fmt.Sprintf("starting server at http://%s", addr))
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Error(fmt.Errorf("failed to start server %s", err).Error())
