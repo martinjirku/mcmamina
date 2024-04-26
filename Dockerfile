@@ -31,7 +31,7 @@ FROM golang:1.22.0 as be-builder
 RUN go install github.com/a-h/templ/cmd/templ@latest
 
 COPY . /app
-COPY --from=fe-build /app/dist /app/dist
+COPY --from=node-base /app/dist /app/dist
 WORKDIR /app
 
 RUN templ generate
