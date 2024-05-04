@@ -46,7 +46,7 @@ func Login(log *slog.Logger, cssPathGetter CSSPathGetter, recaptcha RecaptchaVal
 }
 
 func (l *LoginPage) loginGet(w http.ResponseWriter, r *http.Request) {
-	model := createModel("Prihlásenie", "Login", "/login", "activities", l.cssPathGetter)
+	model := createModel("Prihlásenie", "/login", "activities", l.cssPathGetter)
 	model["csrfTokenField"] = nosurf.FormFieldName
 	model["csrfToken"] = nosurf.Token(r)
 	model["username"] = ""
@@ -58,7 +58,7 @@ func (l *LoginPage) loginGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func (l *LoginPage) loginAction(w http.ResponseWriter, r *http.Request) {
-	model := createModel("Prihlásenie", "Login", "/login", "activities", l.cssPathGetter)
+	model := createModel("Prihlásenie", "/login", "activities", l.cssPathGetter)
 	r.ParseForm()
 	username := r.Form.Get("username")
 	model["csrfToken"] = nosurf.Token(r)

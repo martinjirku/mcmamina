@@ -8,12 +8,11 @@ import (
 	"net/http"
 )
 
-func createModel(title, module, menuItemUrl, class string, cssPathGetter CSSPathGetter) map[string]any {
+func createModel(title, menuItemUrl, class string, cssPathGetter CSSPathGetter) map[string]any {
 	cssPath, _ := cssPathGetter.GetCssPath()
 	return map[string]any{
 		"Title":       title,
 		"Css":         cssPath,
-		"Module":      module,
 		"layoutClass": fmt.Sprintf("%s w-full bg-cover bg-center text-indigo-800 font-light", class),
 		"Menu":        getMenuItems(menuItemUrl),
 	}
@@ -50,7 +49,7 @@ func AboutUs(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Templ
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		model := createModel("O nás", "AboutUs", "/o-nas", "about-us", cssPathGetter)
+		model := createModel("O nás", "/o-nas", "about-us", cssPathGetter)
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
 			log.Error("page executing context", err)
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
@@ -67,7 +66,7 @@ func Activities(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Te
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		model := createModel("Aktivity", "Activities", "/aktivity", "activities", cssPathGetter)
+		model := createModel("Aktivity", "/aktivity", "activities", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
 			log.Error("page executing context", err)
@@ -85,7 +84,7 @@ func BabyDeliveryCourse(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *tem
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		model := createModel("Predpôrodný kurz", "BabyDeliveryCourse", "/aktivity", "baby-delivery-course", cssPathGetter)
+		model := createModel("Predpôrodný kurz", "/aktivity", "baby-delivery-course", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/predporodny-kurz")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
 			log.Error("page executing context", err)
@@ -103,7 +102,7 @@ func Marketplace(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.T
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		model := createModel("Burzy", "Marketplace", "/aktivity", "marketplace", cssPathGetter)
+		model := createModel("Burzy", "/aktivity", "marketplace", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/burzy")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
 			log.Error("page executing context", err)
@@ -121,7 +120,7 @@ func SupportGroups(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		model := createModel("Podporné skupiny", "SupportGroups", "/aktivity", "activities", cssPathGetter)
+		model := createModel("Podporné skupiny", "/aktivity", "activities", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/podporne-skupiny")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
 			log.Error("page executing context", err)
@@ -139,7 +138,7 @@ func Calendar(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Temp
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		model := createModel("Kalendár", "Calendar", "/aktivity", "calendar", cssPathGetter)
+		model := createModel("Kalendár", "/aktivity", "calendar", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/kalendar")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
 			log.Error("page executing context", err)

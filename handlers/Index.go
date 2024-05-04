@@ -112,7 +112,7 @@ func (p *PageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	model := map[string]any{
 		"Title":       "Domov",
 		"Css":         cssPath,
-		"Module":      "Index",
+		"Module":      "index",
 		"layoutClass": "index-page w-full bg-cover bg-center text-indigo-800 font-light",
 		"Menu":        getMenuItems("/"),
 		"calendar": map[string]any{
