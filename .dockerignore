@@ -1,7 +1,5 @@
 # flyctl launch added from .gitignore
 **/node_modules
-**/*_templ.go
-**/**/*_templ.go
 **/public
 **/tmp
 **/dist

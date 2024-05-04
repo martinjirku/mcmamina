@@ -5,6 +5,7 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	"html/template"
 	"io/fs"
 	"log/slog"
 	"net/http"
@@ -17,6 +18,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/42atomys/sprout"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"jirku.sk/mcmamina/handlers"
@@ -31,7 +33,7 @@ const (
 	GOOGLE_CAPTCHA_SITE = "GOOGLE_CAPTCHA_SITE"
 )
 
-//go:embed dist dist/.vite
+//go:embed dist dist/.vite templates/**/*.tmpl
 var distFS embed.FS
 
 func main() {
@@ -78,19 +80,27 @@ func setupWebserver(log *slog.Logger) {
 	})
 
 	setupPanorama(config.panoramaURL, router, log)
-
-	router.HandleFunc("/", handlers.NewIndexHandler(log, calendarService, cssService).ServeHTTP).Methods("GET")
-	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService)).Methods("GET")
+	tmpl, err := template.
+		New("base").
+		Funcs(sprout.FuncMap()).
+		ParseFS(distFS, "templates/**/*.tmpl")
+	if err != nil {
+		log.Error("loading templates: %w", err)
+		os.Exit(1)
+	}
+	router.HandleFunc("/", handlers.NewPageHandler(log, calendarService, cssService, tmpl, distFS).ServeHTTP).Methods("GET")
+	router.HandleFunc("/error", handlers.HandleError(log, cssService, tmpl, distFS))
+	router.HandleFunc("/o-nas", handlers.AboutUs(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/aktivity", handlers.Activities(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/aktivity/predporodny-kurz", handlers.BabyDeliveryCourse(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/aktivity/podporne-skupiny", handlers.SupportGroups(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/aktivity/burzy", handlers.Marketplace(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/aktivity/kalendar", handlers.Calendar(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/podpora/dobrovolnici", handlers.Volunteers(log, cssService, tmpl, distFS)).Methods("GET")
+	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService, tmpl, distFS)).Methods("GET", "POST")
 	// MCMAMINA -->> GENERATED CODE
-	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService))
-	router.HandleFunc("/aktivity/burzy", handlers.Marketplace(log, cssService)).Methods("GET")
-	router.HandleFunc("/aktivity/podporne-skupiny", handlers.SupportGroups(log, cssService)).Methods("GET")
-	router.HandleFunc("/aktivity/predporodny-kurz", handlers.BabyDeliveryCourse(log, cssService)).Methods("GET")
-	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService)).Methods("GET")
-	router.HandleFunc("/podpora/dobrovolnici", handlers.Volunteers(log, cssService)).Methods("GET")
-	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService)).Methods("GET")
-	router.HandleFunc("/aktivity", handlers.Activities(log, cssService)).Methods("GET")
-	router.HandleFunc("/aktivity/kalendar", handlers.Calendar(log, cssService)).Methods("GET")
 	// MCMAMINA <<-- GENERATED CODE
 	handleFiles(router, http.FS(workingFolder))
 

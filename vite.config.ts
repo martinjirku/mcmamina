@@ -41,19 +41,8 @@ export default defineConfig({
     manifest: true,
     rollupOptions: {
       input: [
-        "template/layout/Layout.ts",
-        "template/pages/Index.ts",
-        "template/pages/AboutUs.ts",
-        "template/pages/SupportedUs.ts",
-        "template/pages/Calendar.ts",
-        // -> MCMAMINA - GENERATE PAGE
-        "template/pages/Login.ts",
-        "template/pages/Volunteers.ts",
-        "template/pages/Marketplace.ts",
-        "template/pages/SupportGroups.ts",
-        "template/pages/BabyDeliveryCourse.ts",
-        "template/pages/Activities.ts",
-        "template/pages/TaxBonus.ts",
+        "templates/layout/layout.ts",
+        "templates/pages/index.ts",
       ],
       output: {
         dir: "dist",

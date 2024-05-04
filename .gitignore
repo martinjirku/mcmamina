@@ -1,12 +1,9 @@
 node_modules/
-*_templ.go
-**/*_templ.go
 public/
 tmp/
 dist/
 .env
 vendor/**/*
-*_templ.txt
 template**/*.html
 .data/
 .task/

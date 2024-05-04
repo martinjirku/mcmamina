@@ -1,129 +1,149 @@
 package handlers
 
 import (
+	"fmt"
+	"html/template"
+	"io/fs"
 	"log/slog"
 	"net/http"
-
-	"jirku.sk/mcmamina/template/components"
-	"jirku.sk/mcmamina/template/pages"
 )
 
-func AboutUs(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"AboutUs",
-			"Domov",
-			cssPath,
-			pages.AboutUsPage(),
-		)).Render(r.Context(), w)
+func createModel(title, module, menuItemUrl, class string, cssPathGetter CSSPathGetter) map[string]any {
+	cssPath, _ := cssPathGetter.GetCssPath()
+	return map[string]any{
+		"Title":       title,
+		"Css":         cssPath,
+		"Module":      module,
+		"layoutClass": fmt.Sprintf("%s w-full bg-cover bg-center text-indigo-800 font-light", class),
+		"Menu":        getMenuItems(menuItemUrl),
 	}
 }
 
-func Activities(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
+func addActivitySubmenu(model map[string]any, activePath string) map[string]any {
+	model["submenu"] = []map[string]any{
+		{"label": "Predpôrodný kurz", "href": "/aktivity/predporodny-kurz", "isActive": activePath == "/aktivity/predporodny-kurz"},
+		{"label": "Podporné skupiny", "href": "/aktivity/podporne-skupiny", "isActive": activePath == "/aktivity/podporne-skupiny"},
+		{"label": "Burzy", "href": "/aktivity/burzy", "isActive": activePath == "/aktivity/burzy"},
+		{"label": "Kalendár", "href": "/aktivity/kalendar", "isActive": activePath == "/aktivity/kalendar"},
+	}
+	return model
+}
+
+func getTmpl(tmpl *template.Template, templateName string, file fs.FS) (*template.Template, error) {
+	currentTmpl, err := tmpl.Clone()
+	if err != nil {
+		return nil, fmt.Errorf("cloning template: %w", err)
+	}
+	currentTmpl, err = currentTmpl.ParseFS(file, fmt.Sprintf("templates/pages/%s", templateName))
+	if err != nil {
+		return nil, fmt.Errorf("ParseFS 'templates/pages/%s': %w", templateName, err)
+	}
+	return currentTmpl, nil
+}
+
+func AboutUs(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+	currentTmpl, err := getTmpl(tmpl, "about-us.tmpl", file)
+	if err != nil {
+		log.Error("cloning template: %w", err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"Activities",
-			"Aktivity",
-			cssPath,
-			pages.ActivitiesPage(),
-		)).Render(r.Context(), w)
+
+		model := createModel("O nás", "AboutUs", "/o-nas", "about-us", cssPathGetter)
+		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
+			log.Error("page executing context", err)
+			http.Redirect(w, r, "/error", http.StatusInternalServerError)
+		}
 	}
 }
 
-func BabyDeliveryCourse(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
+func Activities(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+	currentTmpl, err := getTmpl(tmpl, "activity.tmpl", file)
+	if err != nil {
+		log.Error("cloning template: %w", err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"BabyDeliveryCourse",
-			"Predpôrodný kurz",
-			cssPath,
-			pages.BabyDeliveryCoursePage(),
-		)).Render(r.Context(), w)
+
+		model := createModel("Aktivity", "Activities", "/aktivity", "activities", cssPathGetter)
+		model = addActivitySubmenu(model, "/aktivity")
+		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
+			log.Error("page executing context", err)
+			http.Redirect(w, r, "/error", http.StatusInternalServerError)
+		}
 	}
 }
 
-func Calendar(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
+func BabyDeliveryCourse(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+	currentTmpl, err := getTmpl(tmpl, "activity.babydelivery.tmpl", file)
+	if err != nil {
+		log.Error("cloning template: %w", err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"Calendar",
-			"Kalendár",
-			cssPath,
-			pages.CalendarPage(),
-		)).Render(r.Context(), w)
+
+		model := createModel("Predpôrodný kurz", "BabyDeliveryCourse", "/aktivity", "baby-delivery-course", cssPathGetter)
+		model = addActivitySubmenu(model, "/aktivity/predporodny-kurz")
+		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
+			log.Error("page executing context", err)
+			http.Redirect(w, r, "/error", http.StatusInternalServerError)
+		}
 	}
 }
 
-func Marketplace(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
+func Marketplace(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+	currentTmpl, err := getTmpl(tmpl, "activity.marketplace.tmpl", file)
+	if err != nil {
+		log.Error("cloning template: %w", err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"Marketplace",
-			"Burzy",
-			cssPath,
-			pages.MarketplacePage(),
-		)).Render(r.Context(), w)
+
+		model := createModel("Burzy", "Marketplace", "/aktivity", "marketplace", cssPathGetter)
+		model = addActivitySubmenu(model, "/aktivity/burzy")
+		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
+			log.Error("page executing context", err)
+			http.Redirect(w, r, "/error", http.StatusInternalServerError)
+		}
 	}
 }
 
-func SupportGroups(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
+func SupportGroups(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+	currentTmpl, err := getTmpl(tmpl, "activity.marketplace.tmpl", file)
+	if err != nil {
+		log.Error("cloning template: %w", err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"SupportGroups",
-			"Podporné skupiny",
-			cssPath,
-			pages.SupportGroupsPage(),
-		)).Render(r.Context(), w)
+
+		model := createModel("Podporné skupiny", "SupportGroups", "/aktivity", "activities", cssPathGetter)
+		model = addActivitySubmenu(model, "/aktivity/podporne-skupiny")
+		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
+			log.Error("page executing context", err)
+			http.Redirect(w, r, "/error", http.StatusInternalServerError)
+		}
 	}
 }
 
-func TaxBonus(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"TaxBonus",
-			"2 Percentá z dane",
-			cssPath,
-			pages.TaxBonusPage(),
-		)).Render(r.Context(), w)
+func Calendar(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+	currentTmpl, err := getTmpl(tmpl, "activity.calendar.tmpl", file)
+	if err != nil {
+		log.Error("cloning template: %w", err)
 	}
-}
-
-func Volunteers(Log *slog.Logger, cssPathGetter CSSPathGetter) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		Log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
+		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		cssPath, _ := cssPathGetter.GetCssPath()
-		// TODO: handle GET
-		components.Page(components.NewPage(
-			"Volunteers",
-			"Dobrovoľníci",
-			cssPath,
-			pages.VolunteersPage(),
-		)).Render(r.Context(), w)
+
+		model := createModel("Kalendár", "Calendar", "/aktivity", "calendar", cssPathGetter)
+		model = addActivitySubmenu(model, "/aktivity/kalendar")
+		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
+			log.Error("page executing context", err)
+			http.Redirect(w, r, "/error", http.StatusInternalServerError)
+		}
 	}
 }

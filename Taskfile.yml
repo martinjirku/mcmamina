@@ -16,18 +16,9 @@ tasks:
       - .task/bin/{{.name}}
   
   install:
-    deps: [bin:air, bin:templ]
+    deps: [bin:air]
     cmds:
       - pnpm install --silent
-  bin:templ:
-    deps: [bin:base]
-    silent: true
-    cmds:
-      - export GOBIN={{.GOBIN}} && go install github.com/a-h/templ/cmd/templ@latest
-    generates:
-      - .task/bin/templ
-    test:
-      - test ! -f .task/bin/templ
   bin:air:
     deps: [bin:base]
     silent: true
@@ -47,14 +38,7 @@ tasks:
       - ./node_modules/
 
   watch:
-    deps: [watch:ts, watch:css, watch:templ, watch:server:wait]
-  watch:templ:
-    deps: [bin:templ]
-    cmds:
-      - .task/bin/templ generate -watch -source-map-visualisations=false
-  watch:css:
-    cmds:
-      - npx tailwindcss -i ./styles/main.css -o ./dist/main.css --watch
+    deps: [watch:ts, watch:server:wait]
   watch:ts:
     cmds:
       - npx vite build -w

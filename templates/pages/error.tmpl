@@ -1,0 +1,18 @@
+{{- define "content" -}}
+{{- template "layout.start" .}}
+
+{{- template "com_cards.fullwidth.start" dict "m" "mb-0 mt-12"}}
+{{- template "com_cards.cardcontent.start" "flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center"}}
+	<div class="flex-grow md:max-w-xs flex justify-around items-center">
+		{{- template "com_animatedlogo" "w-48 lg:w-64" -}}
+	</div>
+	<div class="flex-grow md:max-w-xl gap-6 flex flex-col items-center justify-evenly text-center">
+		<span class="text-lg">
+			Niečo sa pokazilo :(
+		</span>
+	</div>
+{{- template "com_cards.cardcontent.end" -}}
+{{- template "com_cards.fullwidth.end" -}}
+
+{{- template "layout.end" .}}
+{{- end -}}

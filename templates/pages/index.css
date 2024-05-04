@@ -1,0 +1,24 @@
+.activities-presentation .image {
+    background-size: cover;
+}
+
+.activities-presentation .image-wrapper:hover .image {
+    transform: scale(1.25);
+}
+
+.activities-presentation .image-wrapper:hover .title.title{
+    --tw-bg-opacity: 0.98;
+}
+
+.activities-presentation .image.bg-dielnicky {
+    background-image: url('@assets/images/dielnicky.jpg')
+}
+.activities-presentation .image.bg-tinka {
+    background-image: url('@assets/images/TINKA.jpg')
+}
+.activities-presentation .image.bg-hrave-cvicenie {
+    background-image: url('@assets/images/hrave-cvicenie.jpg')
+}
+.activities-presentation .image.bg-pohybova-priprava {
+    background-image: url('@assets/images/caleb-woods-jYaImw-FQNI-unsplash.jpg')
+}
