@@ -2,15 +2,18 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
 	"io/fs"
 	"log/slog"
 	"net/http"
 
+	"github.com/gorilla/sessions"
 	"github.com/justinas/nosurf"
 	"golang.org/x/oauth2"
+
+	"jirku.sk/mcmamina/pkg/middleware"
+	"jirku.sk/mcmamina/pkg/models"
 )
 
 type RecaptchaValidator interface {
@@ -89,7 +92,7 @@ func (l *LoginPage) loginAction(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GoogleCallbackHandler(config oauth2.Config) http.HandlerFunc {
+func GoogleCallbackHandler(config oauth2.Config, storeService sessions.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		code := r.FormValue("code")
@@ -112,26 +115,12 @@ func GoogleCallbackHandler(config oauth2.Config) http.HandlerFunc {
 			http.Error(w, "Failed to read response: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		var user struct {
-			Name          string
-			ID            string
-			Email         string
-			VerifiedEmail string
-			Picture       string
-		}
+		var user models.UserLogin
 		if err := json.Unmarshal(userInfoBytes, &user); err != nil {
 			http.Error(w, "Failed to parse user info: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		// Render a response containing user info
-		fmt.Fprintf(w, `<html><head><title>Google User Info</title></head>
-        <body><h1>Welcome %s!</h1>
-			<p><strong>ID:</strong> %s</p><p><strong>Email:</strong> %s</p><p><strong>Email Verified:</strong> %v</p>
-			<p><strong>Profile Picture:</strong> <img src="%s" alt="Profile Picture"></p>
-		</body></html>`,
-			user.Name, user.ID, user.Email, user.VerifiedEmail, user.Picture)
-
+		middleware.StoreUser(w, r, &user, storeService)
+		http.Redirect(w, r, "/admin", http.StatusSeeOther)
 	}
 }

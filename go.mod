@@ -33,6 +33,8 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.4 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.2.2 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/justinas/nosurf v1.1.1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect

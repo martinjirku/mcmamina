@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"encoding/gob"
 	"flag"
 	"fmt"
 	"html/template"
@@ -20,11 +21,13 @@ import (
 
 	"github.com/42atomys/sprout"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"jirku.sk/mcmamina/handlers"
 	"jirku.sk/mcmamina/pkg/middleware"
+	"jirku.sk/mcmamina/pkg/models"
 	"jirku.sk/mcmamina/pkg/services"
 )
 
@@ -36,6 +39,7 @@ const (
 	GOOGLE_AUTH_REDIRECT_PATH = "GOOGLE_AUTH_REDIRECT_PATH"
 	GOOGLE_AUTH_CLIENT_ID     = "GOOGLE_AUTH_CLIENT_ID"
 	GOOGLE_AUTH_CLIENT_SECRET = "GOOGLE_AUTH_CLIENT_SECRET"
+	SESSION_KEY               = "SESSION_KEY"
 )
 
 //go:embed dist dist/.vite templates/**/*.tmpl
@@ -76,8 +80,9 @@ func setupWebserver(log *slog.Logger) {
 		workingFolder = os.DirFS(config.publicPath)
 	}
 
-	cssService, sponsorService, recaptchaService, calendarService := prepareServices(log, workingFolder)
-	prepareMiddleware(router, log)
+	gob.Register(models.UserLogin{})
+	cssService, sponsorService, recaptchaService, calendarService, storeService := prepareServices(log, workingFolder)
+	prepareMiddleware(router, log, storeService)
 
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -113,7 +118,19 @@ func setupWebserver(log *slog.Logger) {
 		Endpoint:     google.Endpoint,
 	}
 	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService, tmpl, googleOAuth2Config, distFS)).Methods("GET", "POST")
-	router.HandleFunc("/auth/google/callback", handlers.GoogleCallbackHandler(googleOAuth2Config))
+	router.HandleFunc("/auth/google/callback", handlers.GoogleCallbackHandler(googleOAuth2Config, storeService))
+
+	// ADMINISTRATION
+	adminHandlers := handlers.AdminHandlers{
+		CssPathGetter: cssService,
+		Recaptcha:     recaptchaService,
+		Log:           log,
+	}
+	adminHandlers.InitTmpl(tmpl, distFS)
+	adminRoute := router.PathPrefix("/admin").Subrouter()
+	adminRoute.Use(middleware.AuthorizeMiddleware)
+	adminRoute.HandleFunc("", adminHandlers.DashboardGet)
+
 	handleFiles(router, http.FS(workingFolder))
 
 	sigs := make(chan os.Signal, 1)
@@ -161,20 +178,21 @@ func parseConfig(log *slog.Logger) configuration {
 	return config
 }
 
-func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.SponsorService, *services.RecaptchaService, *services.CalendarService) {
+func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.SponsorService, *services.RecaptchaService, *services.CalendarService, sessions.Store) {
 	cssService := services.NewCSS(fs, serviceLog(log, "css"))
 	sponsorService := services.NewSponsorService()
 	recaptchaService := services.NewRecaptchaService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CAPTCHA_SITE))
 	calendarService := services.NewCalendarService(os.Getenv(GOOGLE_API_KEY), os.Getenv(GOOGLE_CALENDAR_ID))
-	return cssService, sponsorService, recaptchaService, calendarService
+	storeService := sessions.NewCookieStore([]byte(os.Getenv(SESSION_KEY)))
+	return cssService, sponsorService, recaptchaService, calendarService, storeService
 }
 
-func prepareMiddleware(router *mux.Router, log *slog.Logger) {
+func prepareMiddleware(router *mux.Router, log *slog.Logger, storeService sessions.Store) {
 	router.Use(middleware.Recover(middlewareLog(log, "recover")))
 	router.Use(middleware.RequestID(middlewareLog(log, "requestID")))
 	router.Use(middleware.Logger(middlewareLog(log, "logger")))
 	router.Use(middleware.Csrf)
-	// router.Use(middleware.AuthMiddleware(store))
+	router.Use(middleware.AuthMiddleware(storeService))
 }
 
 func setupPanorama(panoramaPath string, router *mux.Router, log *slog.Logger) {
