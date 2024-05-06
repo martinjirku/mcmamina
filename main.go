@@ -21,6 +21,8 @@ import (
 	"github.com/42atomys/sprout"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 	"jirku.sk/mcmamina/handlers"
 	"jirku.sk/mcmamina/pkg/middleware"
 	"jirku.sk/mcmamina/pkg/services"
@@ -28,9 +30,12 @@ import (
 
 // .env keys
 const (
-	GOOGLE_API_KEY      = "GOOGLE_API_KEY"
-	GOOGLE_CALENDAR_ID  = "GOOGLE_CALENDAR_ID"
-	GOOGLE_CAPTCHA_SITE = "GOOGLE_CAPTCHA_SITE"
+	GOOGLE_API_KEY            = "GOOGLE_API_KEY"
+	GOOGLE_CALENDAR_ID        = "GOOGLE_CALENDAR_ID"
+	GOOGLE_CAPTCHA_SITE       = "GOOGLE_CAPTCHA_SITE"
+	GOOGLE_AUTH_REDIRECT_PATH = "GOOGLE_AUTH_REDIRECT_PATH"
+	GOOGLE_AUTH_CLIENT_ID     = "GOOGLE_AUTH_CLIENT_ID"
+	GOOGLE_AUTH_CLIENT_SECRET = "GOOGLE_AUTH_CLIENT_SECRET"
 )
 
 //go:embed dist dist/.vite templates/**/*.tmpl
@@ -99,9 +104,16 @@ func setupWebserver(log *slog.Logger) {
 	router.HandleFunc("/podpora", handlers.SupportedUs(log, cssService, sponsorService, tmpl, distFS)).Methods("GET")
 	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService, tmpl, distFS)).Methods("GET")
 	router.HandleFunc("/podpora/dobrovolnici", handlers.Volunteers(log, cssService, tmpl, distFS)).Methods("GET")
-	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService, tmpl, distFS)).Methods("GET", "POST")
-	// MCMAMINA -->> GENERATED CODE
-	// MCMAMINA <<-- GENERATED CODE
+
+	googleOAuth2Config := oauth2.Config{
+		RedirectURL:  fmt.Sprintf("%s/auth/google/callback", os.Getenv(GOOGLE_AUTH_REDIRECT_PATH)),
+		ClientID:     os.Getenv(GOOGLE_AUTH_CLIENT_ID),
+		ClientSecret: os.Getenv(GOOGLE_AUTH_CLIENT_SECRET),
+		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile", "openid"},
+		Endpoint:     google.Endpoint,
+	}
+	router.HandleFunc("/prihlasenie", handlers.Login(log, cssService, recaptchaService, tmpl, googleOAuth2Config, distFS)).Methods("GET", "POST")
+	router.HandleFunc("/auth/google/callback", handlers.GoogleCallbackHandler(googleOAuth2Config))
 	handleFiles(router, http.FS(workingFolder))
 
 	sigs := make(chan os.Signal, 1)

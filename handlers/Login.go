@@ -1,12 +1,16 @@
 package handlers
 
 import (
+	"encoding/json"
+	"fmt"
 	"html/template"
+	"io"
 	"io/fs"
 	"log/slog"
 	"net/http"
 
 	"github.com/justinas/nosurf"
+	"golang.org/x/oauth2"
 )
 
 type RecaptchaValidator interface {
@@ -19,9 +23,10 @@ type LoginPage struct {
 	recaptcha     RecaptchaValidator
 	log           *slog.Logger
 	tmpl          *template.Template
+	config        oauth2.Config
 }
 
-func Login(log *slog.Logger, cssPathGetter CSSPathGetter, recaptcha RecaptchaValidator, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
+func Login(log *slog.Logger, cssPathGetter CSSPathGetter, recaptcha RecaptchaValidator, tmpl *template.Template, config oauth2.Config, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "login.tmpl", file)
 	if err != nil {
 		log.Error("cloning template: %w", err)
@@ -34,6 +39,7 @@ func Login(log *slog.Logger, cssPathGetter CSSPathGetter, recaptcha RecaptchaVal
 			recaptcha:     recaptcha,
 			log:           log,
 			tmpl:          currentTmpl,
+			config:        config,
 		}
 
 		switch r.Method {
@@ -69,9 +75,63 @@ func (l *LoginPage) loginAction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		l.log.Info("recaptcha validation failed", slog.Any("error", err))
 		model["errorMsg"] = "Chyba pri overovaní reCAPTCHA"
+	} else if username != "martinjirku@gmail.com" {
+		model["errorMsg"] = "Nesprávna emailová adresa"
+	} else {
+		url := l.config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
+		l.log.Info("redirection to", slog.Any("string", url))
+		http.Redirect(w, r, url, http.StatusSeeOther)
+		return
 	}
 	if err := l.tmpl.ExecuteTemplate(w, "page", model); err != nil {
 		l.log.Error("page executing context", err)
 		http.Redirect(w, r, "/error", http.StatusInternalServerError)
+	}
+}
+
+func GoogleCallbackHandler(config oauth2.Config) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		code := r.FormValue("code")
+		token, err := config.Exchange(ctx, code)
+		if err != nil {
+			http.Error(w, "Failed to exchange token: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Get user info
+		client := config.Client(ctx, token)
+		userInfoResp, err := client.Get("https://www.googleapis.com/oauth2/v3/userinfo")
+		if err != nil {
+			http.Error(w, "Failed to get user info: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer userInfoResp.Body.Close()
+		userInfoBytes, err := io.ReadAll(userInfoResp.Body)
+		if err != nil {
+			http.Error(w, "Failed to read response: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		var user struct {
+			Name          string
+			ID            string
+			Email         string
+			VerifiedEmail string
+			Picture       string
+		}
+		if err := json.Unmarshal(userInfoBytes, &user); err != nil {
+			http.Error(w, "Failed to parse user info: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Render a response containing user info
+		fmt.Fprintf(w, `<html><head><title>Google User Info</title></head>
+        <body><h1>Welcome %s!</h1>
+			<p><strong>ID:</strong> %s</p><p><strong>Email:</strong> %s</p><p><strong>Email Verified:</strong> %v</p>
+			<p><strong>Profile Picture:</strong> <img src="%s" alt="Profile Picture"></p>
+		</body></html>`,
+			user.Name, user.ID, user.Email, user.VerifiedEmail, user.Picture)
+
 	}
 }
