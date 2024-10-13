@@ -66,3 +66,18 @@ func GetUser(r *http.Request) *models.UserLogin {
 	}
 	return nil
 }
+
+func BasicAuthMiddleware(username, password string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user, pass, ok := r.BasicAuth()
+		if !ok || user != username || pass != password {
+			// If the authentication fails, return an unauthorized status and a realm
+			w.Header().Set("WWW-Authenticate", `Basic realm="metrics"`)
+			http.Error(w, "Unauthorized.", http.StatusUnauthorized)
+			return
+		}
+
+		// If authentication succeeds, pass the request to the original handler
+		next.ServeHTTP(w, r)
+	})
+}

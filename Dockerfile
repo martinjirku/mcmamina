@@ -10,9 +10,10 @@ FROM golang:1.23.0 as watch-base
     RUN go install github.com/go-task/task/v3/cmd/task@latest
 
 FROM watch-base as watch
-    COPY . /app
     WORKDIR /app
+    COPY . /app
     RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+    RUN pnpm install
     RUN go mod download
 
 FROM node:20-slim AS node-base
@@ -31,6 +32,23 @@ FROM golang:1.23.0 as be-builder
     WORKDIR /app
 
     RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o mcmamina .
+
+FROM alpine:3.13.5 as migrations
+    RUN apk add --no-cache ca-certificates curl
+    WORKDIR /app
+    ARG TARGETPLATFORM
+    RUN ARCH=$(uname -m) && \
+        if [ "$ARCH" = "x86_64" ]; then \
+            ARCH="amd64"; \
+        elif [ "$ARCH" = "aarch64" ]; then \
+            ARCH="arm64"; \
+        fi && \
+        echo ${ARCH} && \
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-${ARCH}.tar.gz | tar -xz -C /app -f -
+    COPY ./scripts/migrations.sh /app/entrypoint.sh
+    RUN chmod +x /app/entrypoint.sh
+    COPY ./migrations /migrations
+    CMD ["./entrypoint.sh"]
 
 FROM scratch
     COPY --from=be-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/

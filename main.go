@@ -23,6 +23,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"jirku.sk/mcmamina/handlers"
@@ -110,6 +111,10 @@ func setupWebserver(log *slog.Logger) {
 	router.HandleFunc("/podpora/2-percenta-z-dane", handlers.TaxBonus(log, cssService, tmpl, distFS)).Methods("GET")
 	router.HandleFunc("/podpora/dobrovolnici", handlers.Volunteers(log, cssService, tmpl, distFS)).Methods("GET")
 
+	// metrics
+	// authHandler := middleware.BasicAuthMiddleware("username", "password", promhttp.Handler())
+	router.Handle("/metriky", promhttp.Handler())
+
 	googleOAuth2Config := oauth2.Config{
 		RedirectURL:  fmt.Sprintf("%s/auth/google/callback", os.Getenv(GOOGLE_AUTH_REDIRECT_PATH)),
 		ClientID:     os.Getenv(GOOGLE_AUTH_CLIENT_ID),
@@ -188,6 +193,7 @@ func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.Spons
 }
 
 func prepareMiddleware(router *mux.Router, log *slog.Logger, storeService sessions.Store) {
+	router.Use(middleware.PrometheusMiddleware)
 	router.Use(middleware.Recover(middlewareLog(log, "recover")))
 	router.Use(middleware.RequestID(middlewareLog(log, "requestID")))
 	router.Use(middleware.Logger(middlewareLog(log, "logger")))

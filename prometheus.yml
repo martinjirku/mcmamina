@@ -1,0 +1,12 @@
+---
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+alerting:
+
+scrape_configs:
+  - job_name: mcmamina
+    static_configs:
+      - targets: ["mcmamina:8080"]
+    metrics_path: /metriky

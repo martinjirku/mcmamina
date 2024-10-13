@@ -5,6 +5,8 @@ tmp_dir = "tmp"
 [build]
 args_bin = ["--host", "0.0.0.0", "--public", "./dist"]
 bin = "./tmp/main"
+args_bin = [ "--public", "./dist"]
+# args_bin = ["--host", "localhost", "--public", "./dist"]
 cmd = "go build -o ./tmp/main ./main.go"
 delay = 200
 exclude_dir = ["assets", "tmp", "vendor", "node_modules", "public"]
@@ -15,7 +17,7 @@ follow_symlink = false
 # full_bin = ""
 include_dir = ["handlers", "models", "services", "utils", "pkg", "templates"]
 include_ext = ["go", "tmpl"]
-include_file = ["main.go", "dist/assets/style-*.css"]
+include_file = ["main.go", "handlers/*.go", "dist/assets/style-*.css"]
 kill_delay = 5000000000 # nanosecond
 log = "build-errors.log"
 poll = false
