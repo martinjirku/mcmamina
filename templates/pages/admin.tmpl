@@ -1,0 +1,13 @@
+{{- define "content" -}}
+{{- template "layout.start" .}}
+
+{{- template "com_cards.fullwidth.start" dict "m" "mb-0 mt-12"}}
+{{- template "com_cards.cardcontent.start" "flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center"}}
+
+<h1 class="text-3xl">Dobrý deň, {{.user.Name}}!</h1>
+
+{{- template "com_cards.cardcontent.end" -}}
+{{- template "com_cards.fullwidth.end" -}}
+
+{{- template "layout.end" .}}
+{{- end -}}

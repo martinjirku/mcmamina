@@ -1,0 +1,41 @@
+{{- define "content" -}}
+{{- template "layout.start" .}}
+
+{{- template "com_cards.fullwidth.start" dict "m" "mb-0 mt-12"}}
+{{- template "com_cards.cardcontent.start" "flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-10 justify-center"}}
+
+<div class="w-full flex flex-col">
+<h1 class="text-4xl pb-4">Prihlásenie</h1>
+<form action="/prihlasenie" method="post" id="login-form">
+    {{ if .errorMsg }}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Chyba!</strong>
+            <span class="block sm:inline">{{.errorMsg}}</span>
+        </div>
+    {{ end }}
+    <input type="hidden" name="{{.csrfTokenField}}" value={{.csrfToken}} />
+    <input type="text" name="username" placeholder="Prihlásenie" value="{{.username}}" class="w-64" />
+    <button
+        type="submit"
+        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded{{ if .recaptchaKey}} g-recaptcha{{ end }}"
+        {{ if .recaptchaKey }}
+        data-sitekey="{{.recaptchaKey}}"
+        data-callback="onSubmit"
+        data-action="submit"
+        {{ end }}
+    >Prihlásiť</button>
+</form>
+</div>
+<script>
+    function onSubmit(token) {
+        console.log("submitting form");
+        document.getElementById("login-form").submit();
+    }
+</script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+{{- template "com_cards.cardcontent.end" -}}
+{{- template "com_cards.fullwidth.end" -}}
+
+{{- template "layout.end" .}}
+{{- end -}}

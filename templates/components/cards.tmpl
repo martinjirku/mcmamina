@@ -1,0 +1,17 @@
+{{ define "com_cards.fullwidth.start" }}
+<div class="w-full bg-opacity-95 text-xl leading-10 flex justify-around
+ {{list .class
+    (default "bg-indigo-100" .bg)
+    (default "py-12 px-5 md:py-16 xl:py-20" .p)
+    (default "my-12 md:my-16 xl:my-28" .m) | join " "}}">
+{{ end }}
+{{ define "com_cards.fullwidth.end" }}
+</div>
+{{ end }}
+
+{{ define "com_cards.cardcontent.start" }}
+<div class="w-full md:max-w-3xl lg:max-w-4xl {{.}}">
+{{ end }}
+{{ define "com_cards.cardcontent.end" }}
+</div>
+{{ end }}

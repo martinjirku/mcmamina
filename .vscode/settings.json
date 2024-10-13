@@ -1,0 +1,27 @@
+{
+    "css.customData": [
+        ".vscode/css_custom_data.json"
+    ],
+    "tailwindCSS.includeLanguages": {
+        "templ": "html",
+        "go": "go"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/template/**/*.txt": true
+    },
+    "[toml]": {
+        "editor.defaultFormatter": null,
+        "editor.formatOnSave": false
+    },
+    "CodeGPT.apiKey": "CodeGPT Plus Beta",
+    "CodeGPT.Autocomplete.maxTokens": 970,
+    "CodeGPT.Autocomplete.suggestionDelay": 2110,
+    "CodeGPT.Autocomplete.provider": "OpenAI - gpt-3.5-turbo-instruct",
+    "CodeGPT.Autocomplete.enabled": true
+}

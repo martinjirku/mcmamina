@@ -1,61 +1,39 @@
-# base node image
-FROM node:18-bullseye-slim as base
+FROM golang:1.22.0 as watch-base
+    # Install Node.js
+    RUN apt-get update && apt-get install -y curl
+    RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    RUN apt-get install -y nodejs
+    ENV PNPM_HOME="/pnpm"
+    ENV PATH="$PNPM_HOME:$PATH"
+    RUN corepack enable && corepack use pnpm@8.15.6
+    RUN go install github.com/cosmtrek/air@latest
+    RUN go install github.com/go-task/task/v3/cmd/task@latest
 
-# set for base and all layer that inherit from it
-ENV NODE_ENV production
+FROM watch-base as watch
+    COPY . /app
+    WORKDIR /app
+    RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+    RUN go mod download
 
-# Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl sqlite3
+FROM node:20-slim AS node-base
+    ENV PNPM_HOME="/pnpm"
+    ENV PATH="$PNPM_HOME:$PATH"
+    RUN corepack enable
+    COPY . /app
+    WORKDIR /app
 
-# Install all node_modules, including dev dependencies
-FROM base as deps
+    RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+    RUN pnpm build
 
-WORKDIR /myapp
+FROM golang:1.22.0 as be-builder
+    COPY . /app
+    COPY --from=node-base /app/dist /app/dist
+    WORKDIR /app
 
-ADD package.json .npmrc ./
-RUN npm install --include=dev
+    RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o mcmamina .
 
-# Setup production node_modules
-FROM base as production-deps
-
-WORKDIR /myapp
-
-COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json .npmrc ./
-RUN npm prune --omit=dev
-
-# Build the app
-FROM base as build
-
-WORKDIR /myapp
-
-COPY --from=deps /myapp/node_modules /myapp/node_modules
-
-ADD prisma .
-RUN npx prisma generate
-
-ADD . .
-RUN npm run build
-
-# Finally, build the production image with minimal footprint
-FROM base
-
-ENV DATABASE_URL=file:/data/sqlite.db
-ENV PORT="8080"
-ENV NODE_ENV="production"
-
-# add shortcut for connecting to database CLI
-RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
-
-WORKDIR /myapp
-
-COPY --from=production-deps /myapp/node_modules /myapp/node_modules
-COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
-
-COPY --from=build /myapp/build /myapp/build
-COPY --from=build /myapp/public /myapp/public
-COPY --from=build /myapp/package.json /myapp/package.json
-COPY --from=build /myapp/start.sh /myapp/start.sh
-COPY --from=build /myapp/prisma /myapp/prisma
-
-ENTRYPOINT [ "./start.sh" ]
+FROM scratch
+    COPY --from=be-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+    COPY --from=be-builder /app/mcmamina /mcmamina
+    EXPOSE 8080
+    CMD ["/mcmamina"]

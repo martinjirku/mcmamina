@@ -1,7 +1,9 @@
-/node_modules
-*.log
-.DS_Store
-.env
-/.cache
-/public/build
-/build
+# flyctl launch added from .gitignore
+**/node_modules
+**/public
+**/tmp
+**/dist
+**/.env
+**/vendor/**/*
+fly.toml
+**/.task

@@ -1,0 +1,19 @@
+{{- define "submenu" -}}
+
+{{- template "com_cards.fullwidth.start" dict "m" "m-0" "p" "p-0" "bg" "bg-slate-700" "class" "text-slate-100"}}
+{{- template "com_cards.cardcontent.start" "flex flex-row justify-center gap-2 md:gap-6 p-1"}}
+
+{{ range .submenu }}
+<div class="my-1 align-middle text-center overflow-hidden text-ellipsis whitespace-nowrap{{ if .isActive }} underline underline-offset-2{{end}}">
+    <a class="inline-block py-2 px-2 sm:px-3 text-xs md:text-sm hover:bg-slate-800 rounded-md transition-colors duration-500 whitespace-nowrap text-ellipsis"
+        href="{{.href}}">
+        {{.label}}
+    </a>
+</div>
+{{ end }}
+
+
+{{- template "com_cards.cardcontent.end" }}
+{{- template "com_cards.fullwidth.end"}}
+
+{{- end }}

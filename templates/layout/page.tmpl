@@ -1,0 +1,15 @@
+{{- define "page" -}}
+<html lang="sk" class="h-full overflow-x-clip">
+    <head>
+        <meta charSet="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>{{ .Title }}</title>
+        {{- if .Css }}<link rel="stylesheet" href="{{.Css}}"/>{{end -}}
+        <link rel="icon" href="favicon.ico"/>
+    </head>
+    <body class="h-full">
+        {{- template "content" .}}
+        {{- if .Module}}<script type="module" src="/{{.Module}}.es" }></script>{{end -}}
+    </body>
+</html>
+{{- end }}

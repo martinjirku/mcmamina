@@ -1,0 +1,66 @@
+version: '3'
+
+dotenv: ['.env']
+env:
+  GOBIN: "{{.TASKFILE_DIR}}/.task/bin"
+
+tasks:
+  default:
+    deps: [watch]
+
+  bin:base:
+    cmds:
+      - mkdir -p .task/bin
+    silent: true
+    generates:
+      - .task/bin/{{.name}}
+  
+  install:
+    deps: [bin:air]
+    cmds:
+      - pnpm install --silent
+  bin:air:
+    deps: [bin:base]
+    silent: true
+    cmds:
+      - export GOBIN={{.GOBIN}} && go install github.com/cosmtrek/air@latest
+    generates:
+      - .task/bin/air
+    test:
+      - test -f .task/bin/air
+  bin:node_modules:
+    cmds:
+      - pnpm install --silent
+    sources:
+      - package.json
+      - pnpm-lock.yaml
+    generates:
+      - ./node_modules/
+
+  watch:
+    deps: [watch:ts, watch:server:wait]
+  watch:ts:
+    cmds:
+      - npx vite build -w
+  watch:server:wait:
+    cmds:
+      - sleep 1
+      - task: watch:server
+  watch:server:
+    deps: [bin:air]
+    cmds:
+      - .task/bin/air -c .air.toml
+
+  db:start:
+    cmds:
+      - docker run --name mcmamina -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -e POSTGRES_USER=$POSTGRES_USER -v ./.data:/var/lib/postgresql/data -p 5432:5432 -d postgres:alpine
+  db:stop:
+    cmds:
+      - docker stop mcmamina
+      - docker rm mcmamina
+  db:up:
+    cmds:
+      - migrate -path ./migrations -database "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable" up
+  db:down:
+    cmds:
+      - migrate -path ./migrations -database "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable" down

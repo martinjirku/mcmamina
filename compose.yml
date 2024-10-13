@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      target: watch
+    ports:
+      - 8080:8080
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
+      GOOGLE_SMTP_PWD: ${GOOGLE_SMTP_PWD}
+      GOOGLE_SMTP_MAIL: ${GOOGLE_SMTP_MAIL}
+      GOOGLE_CAPTCHA_SITE: ${GOOGLE_CAPTCHA_SITE}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PANORAMA_URL: ${PANORAMA_URL}
+    volumes:
+      - pnpm_cache:/pnpm/store
+    develop:
+      watch:
+        - path: package.json
+          action: rebuild
+        - path: go.mod
+          action: rebuild
+        - path: handlers/
+          action: sync
+        - path: templates/
+          action: sync
+        - path: pkg/
+          action: sync
+    command: task
+
+volumes:
+  pnpm_cache:

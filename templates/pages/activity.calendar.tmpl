@@ -1,0 +1,19 @@
+{{- define "content" -}}
+{{- template "layout.start" .}}
+
+{{- template "submenu" .}}
+
+{{- template "com_cards.fullwidth.start" dict "m" "mb-0" "p" "py-10 px-5 md:py-10 xl:py-16"}}
+{{- template "com_cards.cardcontent.start" "leading-normal"}}
+<h1 class="text-3xl font-bold pb-6 text-center">Kalendár</h1>
+<iframe
+    title="Kalendár"
+    class="w-full"
+    height="600"
+    src="https://calendar.google.com/calendar/embed?src=n4bgt6kl18u5ueku1g38f5kic8%40group.calendar.google.com&ctz=Europe%2FPrague"
+></iframe>
+{{- template "com_cards.cardcontent.end" }}
+{{- template "com_cards.fullwidth.end"}}
+
+{{- template "layout.end" .}}
+{{- end }}
