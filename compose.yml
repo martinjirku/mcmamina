@@ -1,11 +1,9 @@
-version: "3.8"
-
 services:
   app:
     build:
       target: watch
     ports:
-      - 8080:8080
+      - "8080:8080"
     environment:
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
       GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
@@ -26,10 +24,13 @@ services:
           action: rebuild
         - path: handlers/
           action: sync
+          target: watch
         - path: templates/
           action: sync
+          target: watch
         - path: pkg/
           action: sync
+          target: watch
     command: task
 
 volumes:

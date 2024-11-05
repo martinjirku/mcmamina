@@ -1,4 +1,4 @@
-FROM golang:1.22.0 as watch-base
+FROM golang:1.23.0 as watch-base
     # Install Node.js
     RUN apt-get update && apt-get install -y curl
     RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -6,7 +6,7 @@ FROM golang:1.22.0 as watch-base
     ENV PNPM_HOME="/pnpm"
     ENV PATH="$PNPM_HOME:$PATH"
     RUN corepack enable && corepack use pnpm@8.15.6
-    RUN go install github.com/cosmtrek/air@latest
+    RUN go install github.com/air-verse/air@latest
     RUN go install github.com/go-task/task/v3/cmd/task@latest
 
 FROM watch-base as watch
@@ -25,7 +25,7 @@ FROM node:20-slim AS node-base
     RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
     RUN pnpm build
 
-FROM golang:1.22.0 as be-builder
+FROM golang:1.23.0 as be-builder
     COPY . /app
     COPY --from=node-base /app/dist /app/dist
     WORKDIR /app

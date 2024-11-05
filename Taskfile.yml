@@ -23,7 +23,7 @@ tasks:
     deps: [bin:base]
     silent: true
     cmds:
-      - export GOBIN={{.GOBIN}} && go install github.com/cosmtrek/air@latest
+      - export GOBIN={{.GOBIN}} && go install github.com/air-verse/air@latest
     generates:
       - .task/bin/air
     test:
