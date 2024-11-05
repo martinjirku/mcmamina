@@ -24,14 +24,14 @@ services:
           action: rebuild
         - path: handlers/
           action: sync
-          target: watch
+          target: /app/handlers/
         - path: templates/
           action: sync
-          target: watch
+          target: /app/templates/
         - path: pkg/
           action: sync
-          target: watch
-    command: task
+          target: /app/pkg
+    command: task watch
 
 volumes:
   pnpm_cache:

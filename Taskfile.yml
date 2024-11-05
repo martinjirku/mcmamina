@@ -5,8 +5,6 @@ env:
   GOBIN: "{{.TASKFILE_DIR}}/.task/bin"
 
 tasks:
-  default:
-    deps: [watch]
 
   bin:base:
     cmds:
