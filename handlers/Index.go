@@ -31,11 +31,11 @@ func getMenuItems(activePath string) []map[string]any {
 func HandleError(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, fs fs.FS) http.HandlerFunc {
 	currentTmpl, err := tmpl.Clone()
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	currentTmpl, err = currentTmpl.ParseFS(fs, "templates/pages/error.tmpl")
 	if err != nil {
-		log.Error("ParseFS 'templates/pages/index.tmpl': %w", err)
+		log.Error("ParseFS 'templates/pages/index.tmpl'", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -49,7 +49,7 @@ func HandleError(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.T
 			"layoutClass": "index-page w-full bg-cover bg-center text-indigo-800 font-light",
 			"Menu":        getMenuItems("/error"),
 		}); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 		}
 	}
 }
@@ -57,11 +57,11 @@ func HandleError(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.T
 func NewPageHandler(log *slog.Logger, getter EventsGetter, cssPathGetter CSSPathGetter, tmpl *template.Template, fs fs.FS) http.Handler {
 	currentTmpl, err := tmpl.Clone()
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	currentTmpl, err = currentTmpl.ParseFS(fs, "templates/pages/index.tmpl")
 	if err != nil {
-		log.Error("ParseFS 'templates/pages/index.tmpl': %w", err)
+		log.Error("ParseFS 'templates/pages/index.tmpl'", slog.Any("error", err))
 	}
 	handler := PageHandler{
 		Log:           log,
@@ -122,7 +122,7 @@ func (p *PageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		"activities": models.GetActivities(),
 	}
 	if err := p.tmpl.ExecuteTemplate(w, "page", model); err != nil {
-		p.Log.Error("page executing context", err)
+		p.Log.Error("page executing context", slog.Any("error", err))
 		http.Redirect(w, r, "/error", http.StatusInternalServerError)
 	}
 }

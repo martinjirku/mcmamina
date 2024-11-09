@@ -5,8 +5,6 @@ tmp_dir = "tmp"
 [build]
 args_bin = ["--host", "0.0.0.0", "--public", "./dist"]
 bin = "./tmp/main"
-args_bin = [ "--public", "./dist"]
-# args_bin = ["--host", "localhost", "--public", "./dist"]
 cmd = "go build -o ./tmp/main ./main.go"
 delay = 200
 exclude_dir = ["assets", "tmp", "vendor", "node_modules", "public"]

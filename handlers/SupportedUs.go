@@ -26,7 +26,7 @@ func addSupportSubmenu(model map[string]any, activePath string) map[string]any {
 func SupportedUs(log *slog.Logger, cssPathGetter CSSPathGetter, sponsorGetter SponsorGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "support.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -37,7 +37,7 @@ func SupportedUs(log *slog.Logger, cssPathGetter CSSPathGetter, sponsorGetter Sp
 		model["sponsors"], _ = sponsorGetter.GetSponsors(r.Context())
 
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -46,7 +46,7 @@ func SupportedUs(log *slog.Logger, cssPathGetter CSSPathGetter, sponsorGetter Sp
 func TaxBonus(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "support.2percent.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -55,7 +55,7 @@ func TaxBonus(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Temp
 		model := createModel("2 Percentá z dane", "/podpora", "tax-bonus", cssPathGetter)
 		model = addSupportSubmenu(model, "/podpora/2-percenta-z-dane")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -64,7 +64,7 @@ func TaxBonus(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Temp
 func Volunteers(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "support.volunteers.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -73,7 +73,7 @@ func Volunteers(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Te
 		model := createModel("Dobrovoľníci", "/podpora", "volunteers", cssPathGetter)
 		model = addSupportSubmenu(model, "/podpora/dobrovolnici")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}

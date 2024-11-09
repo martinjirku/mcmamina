@@ -21,7 +21,7 @@ func (h *AdminHandlers) InitTmpl(tmpl *template.Template, file fs.FS) *AdminHand
 	var err error
 	h.loginTmpl, err = getTmpl(tmpl, "admin.tmpl", file)
 	if err != nil {
-		h.Log.Error("cloning template: %w", err)
+		h.Log.Error("cloning template", slog.Any("error", err))
 	}
 	return h
 }
@@ -34,7 +34,7 @@ func (h *AdminHandlers) DashboardGet(w http.ResponseWriter, r *http.Request) {
 	model["recaptchaKey"] = h.Recaptcha.Key()
 
 	if err := h.loginTmpl.ExecuteTemplate(w, "page", model); err != nil {
-		h.Log.Error("page executing context", err)
+		h.Log.Error("page executing context", slog.Any("error", err))
 		http.Redirect(w, r, "/error", http.StatusInternalServerError)
 	}
 }

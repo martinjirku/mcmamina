@@ -14,7 +14,8 @@ tasks:
       - .task/bin/{{.name}}
   
   install:
-    deps: [bin:air]
+    desc: install dependencies
+    deps: ["bin:air", "bin:node_modules"]
     cmds:
       - pnpm install --silent
   bin:air:
@@ -36,6 +37,7 @@ tasks:
       - ./node_modules/
 
   watch:
+    desc: watch files and rerun when something was changed
     deps: [watch:ts, watch:server:wait]
   watch:ts:
     cmds:
@@ -50,15 +52,19 @@ tasks:
       - .task/bin/air -c .air.toml
 
   db:start:
+    desc: starts database in a docker
     cmds:
       - docker run --name mcmamina -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -e POSTGRES_USER=$POSTGRES_USER -v ./.data:/var/lib/postgresql/data -p 5432:5432 -d postgres:alpine
   db:stop:
+    desc: starts database in a docker
     cmds:
       - docker stop mcmamina
       - docker rm mcmamina
   db:up:
+    desc: run migration up
     cmds:
       - migrate -path ./migrations -database "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable" up
   db:down:
+    desc: run migration down
     cmds:
       - migrate -path ./migrations -database "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable" down

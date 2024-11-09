@@ -32,7 +32,7 @@ type LoginPage struct {
 func Login(log *slog.Logger, cssPathGetter CSSPathGetter, recaptcha RecaptchaValidator, tmpl *template.Template, config oauth2.Config, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "login.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -61,7 +61,7 @@ func (l *LoginPage) loginGet(w http.ResponseWriter, r *http.Request) {
 	model["username"] = ""
 	model["recaptchaKey"] = l.recaptcha.Key()
 	if err := l.tmpl.ExecuteTemplate(w, "page", model); err != nil {
-		l.log.Error("page executing context", err)
+		l.log.Error("page executing context", slog.Any("error", err))
 		http.Redirect(w, r, "/error", http.StatusInternalServerError)
 	}
 }
@@ -87,7 +87,7 @@ func (l *LoginPage) loginAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := l.tmpl.ExecuteTemplate(w, "page", model); err != nil {
-		l.log.Error("page executing context", err)
+		l.log.Error("page executing context", slog.Any("error", err))
 		http.Redirect(w, r, "/error", http.StatusInternalServerError)
 	}
 }

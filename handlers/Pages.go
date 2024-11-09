@@ -43,7 +43,7 @@ func getTmpl(tmpl *template.Template, templateName string, file fs.FS) (*templat
 func AboutUs(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "about-us.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -51,7 +51,7 @@ func AboutUs(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Templ
 
 		model := createModel("O nás", "/o-nas", "about-us", cssPathGetter)
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -60,7 +60,7 @@ func AboutUs(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Templ
 func Activities(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "activity.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -69,7 +69,7 @@ func Activities(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Te
 		model := createModel("Aktivity", "/aktivity", "activities", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -78,7 +78,7 @@ func Activities(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Te
 func BabyDeliveryCourse(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "activity.babydelivery.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -87,7 +87,7 @@ func BabyDeliveryCourse(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *tem
 		model := createModel("Predpôrodný kurz", "/aktivity", "baby-delivery-course", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/predporodny-kurz")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -96,7 +96,7 @@ func BabyDeliveryCourse(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *tem
 func Marketplace(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "activity.marketplace.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -105,7 +105,7 @@ func Marketplace(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.T
 		model := createModel("Burzy", "/aktivity", "marketplace", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/burzy")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -114,7 +114,7 @@ func Marketplace(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.T
 func SupportGroups(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "activity.marketplace.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -123,7 +123,7 @@ func SupportGroups(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template
 		model := createModel("Podporné skupiny", "/aktivity", "activities", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/podporne-skupiny")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
@@ -132,7 +132,7 @@ func SupportGroups(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template
 func Calendar(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	currentTmpl, err := getTmpl(tmpl, "activity.calendar.tmpl", file)
 	if err != nil {
-		log.Error("cloning template: %w", err)
+		log.Error("cloning template", slog.Any("error", err))
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path))
@@ -141,7 +141,7 @@ func Calendar(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Temp
 		model := createModel("Kalendár", "/aktivity", "calendar", cssPathGetter)
 		model = addActivitySubmenu(model, "/aktivity/kalendar")
 		if err := currentTmpl.ExecuteTemplate(w, "page", model); err != nil {
-			log.Error("page executing context", err)
+			log.Error("page executing context", slog.Any("error", err))
 			http.Redirect(w, r, "/error", http.StatusInternalServerError)
 		}
 	}
