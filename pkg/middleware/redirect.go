@@ -8,6 +8,7 @@ import (
 func RedirectFromWWWSubdomain(logger *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			logger.Info("redirecting", slog.String("host", r.Host))
 			if r.Host == "www.mcmamina.sk" {
 				if r.URL.RawQuery != "" {
 					target := "https://mcmamina.sk"
