@@ -188,6 +188,7 @@ func prepareServices(log *slog.Logger, fs fs.FS) (*services.CSS, *services.Spons
 }
 
 func prepareMiddleware(router *mux.Router, log *slog.Logger, storeService sessions.Store) {
+	router.Use(middleware.RedirectFromWWWSubdomain(log))
 	router.Use(middleware.Recover(middlewareLog(log, "recover")))
 	router.Use(middleware.RequestID(middlewareLog(log, "requestID")))
 	router.Use(middleware.Logger(middlewareLog(log, "logger")))
