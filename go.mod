@@ -1,6 +1,6 @@
 module jirku.sk/mcmamina
 
-go 1.22.0
+go 1.23.0
 
 require (
 	github.com/alecthomas/chroma v0.10.0
