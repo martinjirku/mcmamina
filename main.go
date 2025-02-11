@@ -72,7 +72,7 @@ func setupWebserver(log *slog.Logger) {
 		log.Info("accessing embed FS")
 		folder, err := fs.Sub(distFS, "dist")
 		if err != nil {
-			log.Error("accessing sub 'dist' to embed FS %w", err)
+			log.Error("accessing sub 'dist' to embed FS", "error", err)
 		}
 		workingFolder = folder
 	} else {
@@ -95,7 +95,7 @@ func setupWebserver(log *slog.Logger) {
 		Funcs(sprout.FuncMap()).
 		ParseFS(distFS, "templates/**/*.tmpl")
 	if err != nil {
-		log.Error("loading templates: %w", err)
+		log.Error("loading templates", "error", err)
 		os.Exit(1)
 	}
 	router.HandleFunc("/", handlers.NewPageHandler(log, calendarService, cssService, tmpl, distFS).ServeHTTP).Methods("GET")
