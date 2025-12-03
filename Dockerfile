@@ -1,4 +1,4 @@
-FROM golang:1.23.0 AS watch-base
+FROM golang:1.25.5 AS watch-base
     # Install Node.js
     RUN apt-get update && apt-get install -y curl
     RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -25,7 +25,7 @@ FROM node:22.13.1-slim AS node-base
     RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
     RUN pnpm build
 
-FROM golang:1.23.0 AS be-builder
+FROM golang:1.25.5 AS be-builder
     COPY . /app
     COPY --from=node-base /app/dist /app/dist
     WORKDIR /app
