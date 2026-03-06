@@ -7,3 +7,4 @@ vendor/**/*
 template**/*.html
 .data/
 .task/
+.worktrees/
