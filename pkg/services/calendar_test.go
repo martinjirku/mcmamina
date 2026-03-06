@@ -11,7 +11,7 @@ import (
 
 func TestCalendar(t *testing.T) {
 	var env map[string]string
-	env, err := godotenv.Read("../.env")
+	env, err := godotenv.Read("../../.env")
 	if err != nil {
 		t.Errorf("Error loading .env file %v", err)
 	}
