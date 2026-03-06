@@ -42,7 +42,7 @@ const (
 	SESSION_KEY               = "SESSION_KEY"
 )
 
-//go:embed dist dist/.vite templates/**/*.tmpl
+//go:embed dist/.vite templates/**/*.tmpl
 var distFS embed.FS
 
 func main() {
