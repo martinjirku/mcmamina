@@ -1,7 +1,6 @@
 package layout
 
 import (
-	"fmt"
 	"strings"
 
 	"jirku.sk/mcmamina/pkg/view/components"
@@ -105,11 +104,20 @@ func Footer() g.Node {
 				h.Br(),
 				h.Span(components.BankIcon(iconClass, iconDimension), g.Text(" SK62 8330 0000 0023 0190 0933")),
 				h.Br(),
+				h.H1(h.Class("inline-block mt-3 font-bold leading-10 underline underline-offset-4"), g.Text("Štatutárna zástupkyňa")),
+				h.Br(),
+				h.Span(g.Text("Martina Cabanová")),
+				h.Br(),
+				h.Span(h.A(h.Href("tel:+421948523493"), components.PhoneIcon(iconClass, iconDimension), g.Text("+421948 523 493"))),
+				h.Br(),
+				h.Span(h.A(h.Href("mailto:mcmamina@mcmamina.sk"), components.PhoneIcon(iconClass, iconDimension), g.Text("mcmamina@mcmamina.sk"))),
+				h.Br(),
+				h.Span(h.A(h.Href("mailto:info@mcmamina.sk"), components.MailIcon(iconClass, iconDimension), g.Text("info@mcmamina.sk"))),
 			),
 			h.Div(
 				h.Class("flex-grow font-thin text-sm"),
-				h.H1(h.Class("font-bold leading-10 underline underline-offset-4"), g.Text("Otváracie hodiny")),
-				h.P(g.Text("(ported in next task)")),
+				openingHours(),
+				contacts(),
 			),
 			h.Div(
 				h.Class("flex-grow flex-shrink font-thin text-sm flex w-full md:w-auto justify-start items-center flex-col"),
@@ -125,6 +133,36 @@ func Footer() g.Node {
 	)
 }
 
-func init() {
-	_ = fmt.Sprintf
+func openingHours() g.Node {
+	return g.Raw(`<h1 class="font-bold leading-10 underline underline-offset-4">Otváracie hodiny</h1>
+<table class="text-indigo-100">
+<thead><tr class="hidden"><th>Dni</th><th>Čas</th></tr></thead>
+<tbody>
+<tr><td class="w-36 sm:w-32 md:w-36 lg:w-40">Pondelok</td><td><time datetime="09:00-2" aria-label="09:00">9:00</time> - <time datetime="12:30-2" aria-label="12:30">12:30</time> | <time datetime="16:00-2" aria-label="16:00">16:00</time> - <time datetime="19:00-2" aria-label="19:00">19:00</time></td></tr>
+<tr><td>Utorok</td><td><time datetime="09:00-2" aria-label="09:00">9:00</time> - <time datetime="12:30-2" aria-label="12:30">12:30</time> | <time datetime="16:00-2" aria-label="16:00">16:00</time> - <time datetime="19:00-2" aria-label="19:00">19:00</time></td></tr>
+<tr><td>Streda</td><td><time datetime="09:00-2" aria-label="09:00">9:00</time> - <time datetime="12:30-2" aria-label="12:30">12:30</time> | <time datetime="16:00-2" aria-label="16:00">16:00</time> - <time datetime="19:00-2" aria-label="19:00">19:00</time></td></tr>
+<tr><td>Štvrtok</td><td><time datetime="09:00-2" aria-label="09:00">9:00</time> - <time datetime="12:30-2" aria-label="12:30">12:30</time> | <time datetime="16:00-2" aria-label="16:00">16:00</time> - <time datetime="19:00-2" aria-label="19:00">19:00</time></td></tr>
+<tr><td>Piatok</td><td><time datetime="09:00-2" aria-label="09:00">9:00</time> - <time datetime="12:30-2" aria-label="12:30">12:30</time></td></tr>
+</tbody></table>`)
+}
+
+func contacts() g.Node {
+	iconClass := "fill-indigo-100 mr-2"
+	iconDimension := "16"
+	return h.Div(
+		h.H1(h.Class("font-bold leading-10 underline underline-offset-4 inline-block mt-5"), g.Text("Kontakty")),
+		h.Br(),
+		h.Table(h.Class("text-indigo-100"),
+			h.TBody(
+				h.Tr(
+					h.Td(h.Class("w-36 sm:w-32 md:w-36 lg:w-40 align-text-top"), g.Attr("rowspan", "2"), g.Text("Oslavy")),
+					h.Td(h.A(h.Href("mailto:oslavy@mcmamina.sk"), components.MailIcon(iconClass, iconDimension), g.Text(" oslavy@mcmamina.sk"))),
+				),
+				h.Tr(h.Td(h.A(h.Href("tel:+421948523493"), components.PhoneIcon(iconClass, iconDimension), g.Text(" +421948 523 493")))),
+				h.Tr(h.Td(g.Text("Akcie")), h.Td(h.A(h.Href("mailto:akcie@mcmamina.sk"), components.MailIcon(iconClass, iconDimension), g.Text("akcie@mcmamina.sk")))),
+				h.Tr(h.Td(g.Text("Predpôrodné kurzy")), h.Td(h.A(h.Href("mailto:predporodnykurz.mcmamina@gmail.com"), components.MailIcon(iconClass, iconDimension), g.Text(" predporodnykurz.mcmamina@gmail.com")))),
+				h.Tr(h.Td(g.Text("Burza")), h.Td(h.A(h.Href("mailto:burza@mcmamina.sk"), components.MailIcon(iconClass, iconDimension), g.Text(" burza@mcmamina.sk")))),
+			),
+		),
+	)
 }
