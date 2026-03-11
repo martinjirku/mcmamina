@@ -8,3 +8,5 @@ template**/*.html
 .data/
 .task/
 .worktrees/
+.pnpm-store/
+.worktrees/
