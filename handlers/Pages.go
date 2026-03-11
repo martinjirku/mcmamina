@@ -112,7 +112,7 @@ func Marketplace(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.T
 }
 
 func SupportGroups(log *slog.Logger, cssPathGetter CSSPathGetter, tmpl *template.Template, file fs.FS) func(w http.ResponseWriter, r *http.Request) {
-	currentTmpl, err := getTmpl(tmpl, "activity.marketplace.tmpl", file)
+	currentTmpl, err := getTmpl(tmpl, "activity.supportgroups.tmpl", file)
 	if err != nil {
 		log.Error("cloning template", "error", err)
 	}
